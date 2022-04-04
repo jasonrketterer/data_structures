@@ -19,6 +19,24 @@ void List<T>::Clear() {
         PopFront();
 }
 
+// reverse nodes in place
+template <typename T>
+void List<T>::Reverse() {
+    if(Empty() || Size() == 1)
+        return;
+    Node * curr, * temp;
+    curr = head_;
+    while(curr != nullptr) {
+        temp = curr->next_;
+        curr->next_ = curr->prev_;
+        curr->prev_ = temp;
+        curr = temp;
+    }
+    temp = head_;
+    head_ = tail_;
+    tail_ = temp;
+}
+
 template <typename T>
 bool List<T>::Empty() const {
     return head_ == 0;
@@ -92,3 +110,9 @@ void List<T>::Display(std::ostream & os, char ofc) const {
     }
     std::cout << std::endl;
 }
+
+template <typename T>
+ListIterator<T>::ListIterator() : curr_(nullptr){;}
+
+template <typename T>
+ListIterator<T>::ListIterator(const Iterator & i) : curr_(i){;}

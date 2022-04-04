@@ -20,14 +20,14 @@ public:
     //List & operator=(const List &); // assignment
 
     void PushBack(const T & t);
-    Iterator Insert(Iterator i, const T & t);
+    //Iterator Insert(Iterator i, const T & t);
 
     bool PopFront();
     bool PopBack();
-    Iterator Remove(Iterator i);
+    //Iterator Remove(Iterator i);
     void Clear();
 
-    //void Reverse();
+    void Reverse();
 
     size_t Size() const;
     bool Empty() const;
@@ -43,7 +43,7 @@ protected:
         Node * prev_;
         Node * next_;
 
-        Node(const T & t) : val_(t), prev_(nullptr), next_(nullptr);
+        explicit Node(const T & t) : val_(t), prev_(nullptr), next_(nullptr) {}
     };
 
     Node * head_;
@@ -55,9 +55,14 @@ protected:
 
 template <typename T>
 class ListIterator {
+public:
     typedef ListIterator<T> Iterator;
 
     ListIterator();
+    ListIterator(const Iterator & i);
+
+protected:
+    typename List<T>::Node * curr_;
 };
 
 #include "list.cpp"

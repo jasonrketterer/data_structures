@@ -2,8 +2,12 @@
 #include <iomanip>
 #include <string>
 #include "vector.h"
+#include "list.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    List<int> L;
+    L.PushBack(1); L.PushBack(2); L.PushBack(3);
+    L.Display(std::cout);
+    L.Reverse();
+    L.Display(std::cout);
 }
