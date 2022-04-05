@@ -102,6 +102,20 @@ size_t List<T>::Size() const {
 }
 
 template <typename T>
+ListIterator<T> List<T>::Begin() {
+    Iterator i;
+    i.curr_ = head_;
+    return i;
+}
+
+template <typename T>
+ListIterator<T> List<T>::End() {
+    Iterator i;
+    i.curr_ = tail_->next_;
+    return i;
+}
+
+template <typename T>
 void List<T>::Display(std::ostream & os, char ofc) const {
     Node * curr = head_;
     while(curr != nullptr) {
@@ -115,4 +129,47 @@ template <typename T>
 ListIterator<T>::ListIterator() : curr_(nullptr){;}
 
 template <typename T>
-ListIterator<T>::ListIterator(const Iterator & i) : curr_(i){;}
+ListIterator<T>::ListIterator(const Iterator & i) : curr_(i.curr_){;}
+
+template <typename T>
+bool ListIterator<T>::operator == (const ListIterator& i2) const {
+    return curr_ == i2.curr_;
+}
+
+template <typename T>
+bool ListIterator<T>::operator != (const ListIterator& i2) const {
+    return !(*this == i2);
+}
+
+template <typename T>
+T & ListIterator<T>::operator * () {
+    if(curr_ != nullptr)
+        return curr_->val_;
+}
+
+template <typename T>
+const T & ListIterator<T>::operator * () const {
+    if(curr_ != nullptr)
+        return curr_->val_;
+}
+
+template <typename T>
+ListIterator<T> & ListIterator<T>::operator = (const Iterator & i) {
+    curr_ = i.curr_;
+    return *this;
+}
+
+template <typename T>
+ListIterator<T> & ListIterator<T>::operator ++ () {
+    if(curr_ != nullptr)
+        curr_ = curr_->next_;
+    return *this;
+}
+
+template <typename T>
+ListIterator<T> ListIterator<T>::operator ++ (int) {
+    ListIterator<T> copy = *this;
+    if(curr_ != nullptr)
+        curr_ = curr_->next_;
+    return copy;
+}

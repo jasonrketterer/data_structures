@@ -32,6 +32,10 @@ public:
     size_t Size() const;
     bool Empty() const;
 
+    // Iterator support
+    Iterator Begin();
+    Iterator End();
+
     void Display(std::ostream & os, char ofc = '\0') const;
 
 protected:
@@ -61,8 +65,18 @@ public:
     ListIterator();
     ListIterator(const Iterator & i);
 
+    bool operator == (const ListIterator& i2) const;
+    bool operator != (const ListIterator& i2) const;
+    T & operator * ();
+    const T & operator * () const;
+    ListIterator & operator = (const ListIterator & i);
+    ListIterator & operator ++ (); // prefix
+    ListIterator operator ++ (int); // postfix
+
 protected:
     typename List<T>::Node * curr_;
+
+    friend class List<T>;
 };
 
 #include "list.cpp"
