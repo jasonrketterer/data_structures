@@ -7,7 +7,13 @@
 int main() {
     List<int> L;
     L.PushBack(1); L.PushBack(2); L.PushBack(3);
-    for(List<int>::Iterator i = L.Begin(); i != L.End(); ++i)
-        std::cout << *i << '\n';
-    std::cout << std::endl;
+    List<int>::Iterator i = L.Begin();
+    L.Insert(i, 4);
+    L.Display(std::cout);
+    i = L.End();
+    L.Insert(i, 5);
+    L.Display(std::cout);
+    i = L.Begin(); i++; i++;
+    L.Insert(i,6);
+    L.Display(std::cout);
 }

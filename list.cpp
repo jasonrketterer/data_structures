@@ -43,6 +43,20 @@ bool List<T>::Empty() const {
 }
 
 template <typename T>
+void List<T>::PushFront(const T & t) {
+    Node * newNode = new Node(t);
+    if(Empty()) {
+        head_ = tail_ = newNode;
+    }
+    else {
+        head_->prev_ = newNode;
+        newNode->next_ = head_;
+        head_ = newNode;
+    }
+    ++size_;
+}
+
+template <typename T>
 void List<T>::PushBack(const T & t) {
     Node * newNode = new Node(t);
     if(Empty()) {
@@ -54,6 +68,28 @@ void List<T>::PushBack(const T & t) {
         tail_ = newNode;
     }
     ++size_;
+}
+
+template <typename T>
+ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
+    if(i == Begin()) {
+        PushFront(t);
+        i.curr_ = head_;
+        return i;
+    }
+    if(i == End()) {
+        PushBack(t);
+        i.curr_ = tail_;
+        return i;
+    }
+    Node * newNode = new Node(t);
+    newNode->prev_ = i.curr_->prev_;
+    newNode->next_ = i.curr_;
+    newNode->next_->prev_ = newNode;
+    newNode->prev_->next_ = newNode;
+    i.curr_ = newNode;
+    ++size_;
+    return i;
 }
 
 template <typename T>
@@ -169,7 +205,6 @@ ListIterator<T> & ListIterator<T>::operator ++ () {
 template <typename T>
 ListIterator<T> ListIterator<T>::operator ++ (int) {
     ListIterator<T> copy = *this;
-    if(curr_ != nullptr)
-        curr_ = curr_->next_;
+    ++*this;
     return copy;
 }

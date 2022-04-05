@@ -19,8 +19,9 @@ public:
     ~List();
     //List & operator=(const List &); // assignment
 
+    void PushFront(const T & t);
     void PushBack(const T & t);
-    //Iterator Insert(Iterator i, const T & t);
+    Iterator Insert(Iterator i, const T & t);
 
     bool PopFront();
     bool PopBack();
@@ -48,6 +49,8 @@ protected:
         Node * next_;
 
         explicit Node(const T & t) : val_(t), prev_(nullptr), next_(nullptr) {}
+
+        friend class ListIterator<T>;
     };
 
     Node * head_;
