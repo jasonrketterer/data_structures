@@ -93,18 +93,16 @@ ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
     if(i == Begin()) {
         PushFront(t);
         i.curr_ = head_->next_;
-        ++size_;
         return i;
     }
     if(i == End()) {
         PushBack(t);
         i.curr_ = tail_->prev_;
-        ++size_;
         return i;
     }
     Node * newNode = new Node(t);
-    newNode->prev_ = i.curr_->prev_;
-    newNode->next_ = i.curr_;
+    newNode->prev_ = i.curr_;
+    newNode->next_ = i.curr_->next_;
     newNode->next_->prev_ = newNode;
     newNode->prev_->next_ = newNode;
     i.curr_ = newNode;
@@ -152,24 +150,26 @@ bool List<T>::PopBack() {
 
 template <typename T>
 ListIterator<T> List<T>::Remove(ListIterator<T> i) {
-    if(i.curr_ == nullptr)
+    if(i.curr_ == nullptr || i.curr_ == head_ || i.curr_ == tail_) {
+        std::cerr << "Remove() called on invalid iterator\n";
         return i;
+    }
 
     if(i == Begin()) {
         PopFront();
         i = Begin();
+        return i;
     }
-    else if(i.curr_ == rBegin()) {
+    if(i.curr_ == tail_->prev_) {
         PopBack();
         i = End();
+        return i;
     }
-    else {
-        Node * temp = i.curr_;
-        i.curr_ = i.curr_->next_;
-        i.curr_->prev_ = temp->prev_;
-        temp->prev_->next_ = i.curr_;
-        delete temp;
-    }
+    Node * temp = i.curr_;
+    i.curr_ = i.curr_->next_;
+    i.curr_->prev_ = temp->prev_;
+    temp->prev_->next_ = i.curr_;
+    delete temp;
     --size_;
     return i;
 }
