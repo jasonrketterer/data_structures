@@ -4,16 +4,18 @@
 #include "vector.h"
 #include "list.h"
 #include "stack.h"
+#include "queue.h"
 #include <list>
 
 int main() {
-    Stack<int> S;
-    S.Push(1); S.Push(2); S.Push(3);
-    int val = S.Top();
-    S.Display(std::cout);
-    S.Pop(); S.Pop(); S.Pop();
-    S.Pop();
-    val = S.Top();
+    Queue<int> Q;
+    Q.Enqueue(1); Q.Enqueue(2); Q.Enqueue(3);
+    Q.Display(std::cout);
+    std::cout << Q.Size() << '\n';
+    Q.Dequeue();
+    Q.Display(std::cout);
+    std::cout << Q.Size() << '\n';
+    Q.Dequeue(); Q.Dequeue(); Q.Dequeue();
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

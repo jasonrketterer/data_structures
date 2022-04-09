@@ -96,8 +96,10 @@ ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
 
 template <typename T>
 bool List<T>::PopFront() {
-    if(Empty())
+    if(Empty()) {
+        std::cerr << "**PopFront called on empty List\n";
         return false;
+    }
     Node * temp = head_->next_;
     temp->next_->prev_ = head_;
     head_->next_ = temp->next_;
@@ -108,8 +110,10 @@ bool List<T>::PopFront() {
 
 template <typename T>
 bool List<T>::PopBack() {
-    if(Empty())
+    if(Empty()) {
+        std::cerr << "**PopBack called on empty List\n";
         return false;
+    }
     Node * temp = tail_->prev_;
     temp->prev_->next_ = tail_;
     tail_->prev_ = temp->prev_;
