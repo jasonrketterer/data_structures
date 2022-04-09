@@ -25,7 +25,7 @@ public:
 
     bool PopFront();
     bool PopBack();
-    //Iterator Remove(Iterator i);
+    Iterator Remove(Iterator i);
     void Clear();
 
     void Reverse();
@@ -33,11 +33,22 @@ public:
     size_t Size() const;
     bool Empty() const;
 
+    // access values in the List
+    T & Front();
+    const T & Front() const;
+    T & Back();
+    const T & Back() const;
+
     // Iterator support
-    Iterator Begin();
-    Iterator End();
+    Iterator Begin();  // return iterator to front
+    Iterator End();    // 1 past the back
+    Iterator rBegin(); // return iterator to back
+    Iterator rEnd();   // 1 past the front
 
     void Display(std::ostream & os, char ofc = '\0') const;
+    void Dump(std::ostream & os) const;
+
+    friend class ListIterator<T>;
 
 protected:
     class Node {
@@ -56,8 +67,6 @@ protected:
     Node * head_;
     Node * tail_;
     size_t size_;
-
-    friend class ListIterator<T>;
 };
 
 template <typename T>
@@ -75,6 +84,10 @@ public:
     ListIterator & operator = (const ListIterator & i);
     ListIterator & operator ++ (); // prefix
     ListIterator operator ++ (int); // postfix
+    ListIterator & operator -- (); // prefix
+    ListIterator operator -- (int); // postfix
+
+    void Dump() const;
 
 protected:
     typename List<T>::Node * curr_;
