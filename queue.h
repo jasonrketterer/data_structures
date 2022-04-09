@@ -12,10 +12,10 @@ class Queue {
 public:
     // no constructor; List constructor will be called by default
 
-    void Enqueue(const T & t) { q.PushBack(t); } // add t to back of queue
-    void Dequeue() { q.PopFront(); } // remove item from front of the list
-    T & Front() { q.Front(); } // return item at front of the queue
-    const T & Front() const { q.Front(); } // const version
+    void Push(const T & t) { q.PushBack(t); } // add t to back of queue
+    void Pop() { q.PopFront(); } // remove item from front of the list
+    T & Front() { return q.Front(); } // return item at front of the queue
+    const T & Front() const { return q.Front(); } // const version
     bool Empty() const { return q.Empty(); }
     size_t Size() const { return q.Size(); } // # of items in the queue
     void Display(std::ostream & os) {

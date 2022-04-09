@@ -9,13 +9,13 @@
 
 int main() {
     Queue<int> Q;
-    Q.Enqueue(1); Q.Enqueue(2); Q.Enqueue(3);
+    Q.Push(1); Q.Push(2); Q.Push(3);
     Q.Display(std::cout);
     std::cout << Q.Size() << '\n';
-    Q.Dequeue();
+    Q.Pop();
     Q.Display(std::cout);
-    std::cout << Q.Size() << '\n';
-    Q.Dequeue(); Q.Dequeue(); Q.Dequeue();
+    int val = Q.Front();
+    std::cout << val << '\n';
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
