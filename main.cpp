@@ -8,6 +8,15 @@
 int main() {
     List<int> L;
     L.PushFront(3); L.PushFront(2); L.PushFront(1);
+    L.PopFront(); L.PopBack();
+    L.Display(std::cout);
+    L.PopFront();
+    L.Display(std::cout);
+    L.PushBack(0);
+    L.Display(std::cout);
+    L.PopBack();
+    L.Display(std::cout);
+    /*
     ListIterator<int> i;
     i = L.Begin();
     L.Insert(i,0);
@@ -31,11 +40,12 @@ int main() {
     L.Display(std::cout);
     std::cout << L.Size() << '\n';
     std::cout << *i << '\n';
-    i = L.End(); --i;
+    i = L.End();
     i = L.Remove(i);
     L.Display(std::cout);
     std::cout << L.Size() << '\n';
     std::cout << *(--i) << '\n';
+     */
 
     /*
     int myints[] = {75,23,65,42,13};

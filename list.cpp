@@ -98,17 +98,10 @@ template <typename T>
 bool List<T>::PopFront() {
     if(Empty())
         return false;
-    if(Size() == 1) {
-        delete head_->next_;
-        head_->next_ = tail_;
-        tail_->prev_ = head_;
-    }
-    else {
-        Node * temp = head_->next_;
-        temp->next_->prev_ = head_;
-        head_->next_ = temp->next_;
-        delete temp;
-    }
+    Node * temp = head_->next_;
+    temp->next_->prev_ = head_;
+    head_->next_ = temp->next_;
+    delete temp;
     --size_;
     return true;
 }
@@ -117,17 +110,10 @@ template <typename T>
 bool List<T>::PopBack() {
     if(Empty())
         return false;
-    if(Size() == 1) {
-        delete head_->next_;
-        head_->next_ = tail_;
-        tail_->prev_ = head_;
-    }
-    else {
-        Node * temp = tail_->prev_;
-        temp->prev_->next_ = tail_;
-        tail_->prev_ = temp->prev_;
-        delete temp;
-    }
+    Node * temp = tail_->prev_;
+    temp->prev_->next_ = tail_;
+    tail_->prev_ = temp->prev_;
+    delete temp;
     --size_;
     return true;
 }
@@ -136,17 +122,6 @@ template <typename T>
 ListIterator<T> List<T>::Remove(ListIterator<T> i) {
     if(i.curr_ == nullptr || i.curr_ == head_ || i.curr_ == tail_) {
         std::cerr << "Remove() called on invalid iterator\n";
-        return i;
-    }
-
-    if(i == Begin()) {
-        PopFront();
-        i = Begin();
-        return i;
-    }
-    if(i.curr_ == tail_->prev_) {
-        PopBack();
-        i = End();
         return i;
     }
     Node * temp = i.curr_;
@@ -217,11 +192,13 @@ ListIterator<T> List<T>::rEnd() {
 
 template <typename T>
 void List<T>::Display(std::ostream & os, char ofc) const {
+    std::cout << "[ ";
     Node * curr = head_->next_;
     while(curr != tail_) {
         os << curr->val_ << ' ';
         curr = curr->next_;
     }
+    std::cout << ']';
     os << std::endl;
 }
 
