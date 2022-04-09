@@ -1,7 +1,7 @@
 // Linked List
 //
 // Doubly linked list with sentinel nodes for
-// the head and tail.
+// the head and tail.  Iterator support included.
 //
 // Created by Jason Ketterer on 4/4/22.
 //
@@ -140,26 +140,38 @@ size_t List<T>::Size() const {
 
 template <typename T>
 T & List<T>::Front() {
-    if(!Empty())
-        return head_->next_->val_;
+    if(Empty()) {
+        std::cerr << "**Front() called on empty list\n";
+        exit(EXIT_FAILURE);
+    }
+    return head_->next_->val_;
 }
 
 template <typename T>
 const T & List<T>::Front() const{
-    if(!Empty())
-        return head_->next_->val_;
+    if(Empty()) {
+        std::cerr << "**Front() called on empty list\n";
+        exit(EXIT_FAILURE);
+    }
+    return head_->next_->val_;
 }
 
 template <typename T>
 T & List<T>::Back() {
-    if(!Empty())
-        return tail_->prev_->val_;
+    if(Empty()) {
+        std::cerr << "**Back() called on empty list\n";
+        exit(EXIT_FAILURE);
+    }
+    return tail_->prev_->val_;
 }
 
 template <typename T>
 const T & List<T>::Back() const{
-    if(!Empty())
-        return tail_->prev_->val_;
+    if(Empty()) {
+        std::cerr << "**Back() called on empty list\n";
+        exit(EXIT_FAILURE);
+    }
+    return tail_->prev_->val_;
 }
 
 template <typename T>
