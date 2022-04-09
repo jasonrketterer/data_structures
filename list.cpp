@@ -55,47 +55,31 @@ bool List<T>::Empty() const {
 template <typename T>
 void List<T>::PushFront(const T & t) {
     Node * newNode = new Node(t);
-    if(Empty()) {
-        head_->next_ = newNode;
-        tail_->prev_ = newNode;
-        newNode->prev_ = head_;
-        newNode->next_ = tail_;
-    }
-    else {
-        head_->next_->prev_ = newNode;
-        newNode->next_ = head_->next_;
-        head_->next_ = newNode;
-        newNode->prev_ = head_;
-    }
+    head_->next_->prev_ = newNode;
+    newNode->next_ = head_->next_;
+    head_->next_ = newNode;
+    newNode->prev_ = head_;
     ++size_;
 }
 
 template <typename T>
 void List<T>::PushBack(const T & t) {
     Node * newNode = new Node(t);
-    if(Empty()) {
-        head_->next_ = newNode;
-        tail_->prev_ = newNode;
-        newNode->prev_ = head_;
-        newNode->next_ = tail_;
-    }
-    else {
-        tail_->prev_->next_ = newNode;
-        newNode->prev_ = tail_->prev_;
-        tail_->prev_ = newNode;
-        newNode->next_ = tail_;
-    }
+    tail_->prev_->next_ = newNode;
+    newNode->prev_ = tail_->prev_;
+    tail_->prev_ = newNode;
+    newNode->next_ = tail_;
     ++size_;
 }
 
 template <typename T>
 ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
-    if(i == Begin()) {
+    if(i == Begin() || i.curr_ == head_) {
         PushFront(t);
         i.curr_ = head_->next_;
         return i;
     }
-    if(i == End()) {
+    if(i == End() || i.curr_ == tail_->prev_) {
         PushBack(t);
         i.curr_ = tail_->prev_;
         return i;

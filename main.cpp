@@ -7,7 +7,7 @@
 
 int main() {
     List<int> L;
-    L.PushBack(1); L.PushBack(2); L.PushBack(3);
+    L.PushFront(3); L.PushFront(2); L.PushFront(1);
     ListIterator<int> i;
     i = L.Begin();
     L.Insert(i,0);
