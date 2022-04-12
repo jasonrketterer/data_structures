@@ -11,7 +11,8 @@ template<typename T>
 class Vector {
 public:
     // constructors and destructor
-    explicit Vector(size_t sz = defaultCapacity);  // vector of size = 0 and capacity = defaultCapacity
+    explicit Vector(size_t sz = 0);                // vector of size = sz and capacity = defaultCapacity || = sz
+                                                   // elements initialized to 0 or default constructor
     Vector(size_t sz, const T &t);                 // size = capacity = sz and all elements = t
     Vector(const Vector<T> & source);              // copy constructor
     virtual ~Vector();                             // destructor

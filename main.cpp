@@ -1,21 +1,18 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <list>
+#include <vector>
 #include "vector.h"
 #include "list.h"
 #include "stack.h"
 #include "queue.h"
-#include <list>
+#include "graph.h"
+
 
 int main() {
-    Queue<int> Q;
-    Q.Push(1); Q.Push(2); Q.Push(3);
-    Q.Display(std::cout);
-    std::cout << Q.Size() << '\n';
-    Q.Pop();
-    Q.Display(std::cout);
-    int val = Q.Front();
-    std::cout << val << '\n';
+    Graph<int> G(10);
+
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

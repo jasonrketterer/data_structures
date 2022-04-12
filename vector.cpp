@@ -7,7 +7,8 @@
 #include <iostream>
 
 template <typename T>
-Vector<T>::Vector(size_t sz) : size_(0), capacity_(sz), content_(0) {
+Vector<T>::Vector(size_t sz) : size_(sz), capacity_(0), content_(0) {
+    capacity_ = (size_ == 0) ? defaultCapacity : size_;
     content_ = NewArray(capacity_);
 }
 

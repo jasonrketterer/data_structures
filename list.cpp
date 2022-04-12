@@ -208,14 +208,17 @@ ListIterator<T> List<T>::rEnd() {
 
 template <typename T>
 void List<T>::Display(std::ostream & os, char ofc) const {
-    std::cout << "[ ";
-    Node * curr = head_->next_;
-    while(curr != tail_) {
-        os << curr->val_ << ' ';
-        curr = curr->next_;
+    if(!Empty()) {
+        //os << "[ ";
+        Node *curr = head_->next_;
+        while (curr != tail_->prev_) {
+            os << curr->val_ << " , ";
+            curr = curr->next_;
+        }
+        os << curr->val_ << std::endl;
+        //os << ']';
+        //os << std::endl;
     }
-    std::cout << ']';
-    os << std::endl;
 }
 
 template <typename T>
