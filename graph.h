@@ -5,6 +5,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <iostream>
+#include <fstream>
 #include "vector.h"
 #include "list.h"
 
@@ -23,6 +25,7 @@ public:
     //size_t InDegree(Vertex v) const;
     //size_t OutDegree(Vertex v) const;
 
+    void readGraphFile(std::istream & is = std::cin);
     void Dump() const;
 
 private:

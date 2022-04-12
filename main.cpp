@@ -12,7 +12,8 @@
 
 int main() {
     Graph<int> G(10);
-
+    G.readGraphFile();
+    G.Dump();
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

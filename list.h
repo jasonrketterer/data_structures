@@ -45,8 +45,8 @@ public:
     Iterator rBegin(); // return iterator to back
     Iterator rEnd();   // 1 past the front
 
-    void Display(std::ostream & os, char ofc = '\0') const;
-    void Dump(std::ostream & os) const;
+    void Display(std::ostream & os = std::cout, char ofc = '\0') const;
+    void Dump(std::ostream & os = std::cout) const;
 
     friend class ListIterator<T>;
 

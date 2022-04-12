@@ -31,8 +31,8 @@ public:
     void Clear();                                   // set size to 0
 
     // Display methods
-    void Display(std::ostream & os, char ofc = '\0') const;
-    void Dump(std::ostream & os) const;
+    void Display(std::ostream & os = std::cout, char ofc = '\0') const;
+    void Dump(std::ostream & os = std::cout) const;
 
 protected:
     size_t size_;     // current size of the vector, number of elements it is holding
