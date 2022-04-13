@@ -51,6 +51,83 @@ size_t Graph<T>::OutDegree(Vertex v) {
     return g_[v].Size();
 }
 
+// Iterative version of Depth First Search
+template <typename T>
+void Graph<T>::dfsIter(Vertex src) {
+    Stack<T> stk;
+    Vector<bool> visited(VertexSize(), false);
+    Vector< ListIterator<T> > adjListIterators(VertexSize());
+
+    // adjListIterators will be an array of Iterators for each vertex adjacency list
+    // that will find the next unvisited vertex in the list.  This will allow us to
+    // traverse each list only one time, help keeping runtime O(|V| + |E|)
+
+    // initialize adjListIterators
+    for(Vertex v = 0; v < VertexSize(); ++v)
+        adjListIterators[v] = g_[v].Begin();
+
+    Vertex top;
+    ListIterator<T> nuv;
+
+    stk.Push(src);
+    while(!stk.Empty()) {
+        top = stk.Top();
+        if(!visited[top]) {
+            visited[top] = true;
+            std::cout << top << ' ';
+        }
+        nuv = findNextUnvisited(top, visited, adjListIterators);
+        if(nuv != g_[top].End()) {
+            stk.Push(*nuv);
+        }
+        else { // no more neighbors to visit
+            stk.Pop();
+        }
+    }
+    std::cout << std::endl;
+}
+
+template <typename T>
+ListIterator<T> Graph<T>::findNextUnvisited(Vertex v, Vector<bool> & visited, Vector< ListIterator<T> > & adjListIterators) {
+    while(adjListIterators[v] != g_[v].End() && visited[*adjListIterators[v]])
+        ++adjListIterators[v];
+    return adjListIterators[v];
+}
+
+template <typename T>
+void Graph<T>::dfs(Vertex src) {
+    static Vector<bool> visited(VertexSize(), false);
+
+    if(!visited[src]) {
+        std::cout << src << ' ';
+        visited[src] = true;
+    }
+    ListIterator<T> i;
+    for(i = g_[src].Begin(); i != g_[src].End(); ++i)
+        if(!visited[*i])
+            dfs(*i);
+}
+
+template <typename T>
+void Graph<T>::bfs(Vertex src) {
+    Vector<bool> visited(VertexSize(), false);
+    Queue<T> q;
+
+    q.Push(src);
+    Vertex front; ListIterator<T> i;
+    while(!q.Empty()) {
+        front = q.Front();
+        q.Pop();
+        visited[front] = true;
+        std::cout << front << ' ';
+        for(i = g_[front].Begin(); i != g_[front].End(); ++i) {
+            if (!visited[*i])
+                q.Push(*i);
+            visited[*i] = true;
+        }
+    }
+}
+
 
 // expects to read the number of vertices first and then the edges in format 'from to to to ...'
 // on a new line for each vertex

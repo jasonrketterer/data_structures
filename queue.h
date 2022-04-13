@@ -18,7 +18,7 @@ public:
     const T & Front() const { return q.Front(); } // const version
     bool Empty() const { return q.Empty(); }
     size_t Size() const { return q.Size(); } // # of items in the queue
-    void Display(std::ostream & os) {
+    void Display(std::ostream & os = std::cout) {
         os << "front -> ";
         q.Display(os);
     }

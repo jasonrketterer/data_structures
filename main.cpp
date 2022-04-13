@@ -14,11 +14,10 @@ int main() {
     Graph<int> G{};
     G.readGraphFile();
     G.Dump();
-    std::cout << "Vertex" << '\t' << "InDegree" << '\t' << "OutDegree\n";
-    for(size_t v = 0; v < G.VertexSize(); ++v) {
-        std::cout << std::setw(6) << v << '\t' << std::setw(8) << G.InDegree(v) << '\t'
-            << std::setw(8) << G.OutDegree(v) << '\n';
-    }
+    std::cout << std::endl;
+    G.bfs(5);
+
+
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

@@ -9,9 +9,10 @@
 #define GRAPH_H
 
 #include <iostream>
-#include <fstream>
 #include "vector.h"
 #include "list.h"
+#include "stack.h"
+#include "queue.h"
 
 template <typename T>
 class Graph {
@@ -28,12 +29,20 @@ public:
     size_t InDegree(Vertex v);
     size_t OutDegree(Vertex v);
 
+    void dfsIter(Vertex src); // iterative version
+    void dfs(Vertex src);  // recursive version
+
+    void bfs(Vertex src);
+
     void readGraphFile(std::istream & is = std::cin);
     void Dump() const;
 
 private:
     Vector< List<Vertex> > g_;
     size_t n_;
+
+    // helper function for DFS
+    ListIterator<T> findNextUnvisited(Vertex v, Vector<bool> & visited, Vector< ListIterator<T> > & adjListIterators);
 };
 
 #include "graph.cpp"

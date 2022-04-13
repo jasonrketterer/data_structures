@@ -34,7 +34,7 @@ public:
     }
     bool Empty() const { return stack.Empty(); }
     size_t Size() const { return stack.Size(); }
-    void Display(std::ostream & os) {
+    void Display(std::ostream & os = std::cout) {
         os << "top -> ";
         stack.Display(os);
     }
