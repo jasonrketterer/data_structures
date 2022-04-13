@@ -215,10 +215,12 @@ void List<T>::Display(std::ostream & os, char ofc) const {
             os << curr->val_ << " , ";
             curr = curr->next_;
         }
-        os << curr->val_ << std::endl;
+        os << curr->val_ << '\n';
         //os << ']';
         //os << std::endl;
     }
+    else
+        std::cout << std::endl;
 }
 
 template <typename T>
