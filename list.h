@@ -11,9 +11,13 @@ template <typename T>
 class ListIterator;
 
 template <typename T>
+class ConstListIterator;
+
+template <typename T>
 class List {
 public:
     typedef ListIterator<T> Iterator;
+    typedef ConstListIterator<T> ConstIterator;
 
     List();
     ~List();
@@ -44,6 +48,12 @@ public:
     Iterator End();    // 1 past the back
     Iterator rBegin(); // return iterator to back
     Iterator rEnd();   // 1 past the front
+
+    // ConstIterator support
+    ConstIterator Begin() const;
+    ConstIterator End() const;
+    ConstIterator rBegin() const;
+    ConstIterator rEnd() const;
 
     void Display(std::ostream & os = std::cout, char ofc = '\0') const;
     void Dump(std::ostream & os = std::cout) const;
@@ -83,14 +93,40 @@ public:
     const T & operator * () const;
     ListIterator & operator = (const ListIterator & i);
     ListIterator & operator ++ (); // prefix
-    ListIterator operator ++ (int); // postfix
+    const ListIterator operator ++ (int); // postfix
     ListIterator & operator -- (); // prefix
-    ListIterator operator -- (int); // postfix
-
-    void Dump() const;
+    const ListIterator operator -- (int); // postfix
 
 protected:
     typename List<T>::Node * curr_;
+
+    void Dump() const;
+
+    friend class List<T>;
+};
+
+template <typename T>
+class ConstListIterator : public ListIterator<T> {
+public:
+    typedef ListIterator<T> Iterator;
+    typedef ConstListIterator<T> ConstIterator;
+
+    ConstListIterator();
+    ConstListIterator(const ConstIterator & i);
+
+    //bool operator == (const ListIterator& i2) const;
+    //bool operator != (const ListIterator& i2) const;
+    const T & operator * () const;
+    ConstListIterator & operator = (const ConstListIterator & i);
+    ConstListIterator & operator ++ (); // prefix
+    const ConstListIterator operator ++ (int); // postfix
+    ConstListIterator & operator -- (); // prefix
+    const ConstListIterator operator -- (int); // postfix
+
+protected:
+    typename List<T>::Node * curr_;
+
+    //void Dump() const;
 
     friend class List<T>;
 };

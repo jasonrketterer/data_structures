@@ -207,6 +207,34 @@ ListIterator<T> List<T>::rEnd() {
 }
 
 template <typename T>
+ConstListIterator<T> List<T>::Begin() const {
+    ConstIterator i;
+    i.curr_ = head_->next_;
+    return i;
+}
+
+template <typename T>
+ConstListIterator<T> List<T>::End() const {
+    ConstIterator i;
+    i.curr_ = tail_;
+    return i;
+}
+
+template <typename T>
+ConstListIterator<T> List<T>::rBegin() const {
+    ConstIterator i;
+    i.curr_ = tail_->prev_;
+    return i;
+}
+
+template <typename T>
+ConstListIterator<T> List<T>::rEnd() const {
+    ConstIterator i;
+    i.curr_ = head_;
+    return i;
+}
+
+template <typename T>
 void List<T>::Display(std::ostream & os, char ofc) const {
     if(!Empty()) {
         //os << "[ ";
@@ -241,6 +269,10 @@ void List<T>::Dump(std::ostream &os) const {
     os << "prev: " << tail_->prev_ << '\n';
     os << "next: " << tail_->next_ << "\n\n";
 }
+
+/*********************************************
+ *   ListIterator implementations
+ *********************************************/
 
 template <typename T>
 ListIterator<T>::ListIterator() : curr_(nullptr){;}
@@ -284,7 +316,7 @@ ListIterator<T> & ListIterator<T>::operator ++ () {
 }
 
 template <typename T>
-ListIterator<T> ListIterator<T>::operator ++ (int) {
+const ListIterator<T> ListIterator<T>::operator ++ (int) {
     ListIterator<T> copy = *this;
     ++*this;
     return copy;
@@ -298,7 +330,7 @@ ListIterator<T> & ListIterator<T>::operator -- () {
 }
 
 template <typename T>
-ListIterator<T> ListIterator<T>::operator -- (int) {
+const ListIterator<T> ListIterator<T>::operator -- (int) {
     ListIterator<T> copy = *this;
     --*this;
     return copy;
@@ -307,4 +339,54 @@ ListIterator<T> ListIterator<T>::operator -- (int) {
 template <typename T>
 void ListIterator<T>::Dump() const {
     std::cout << "Iterator's curr address: " << curr_ << '\n';
+}
+
+/*********************************************
+ *   ConstListIterator implementations
+ *********************************************/
+
+template <typename T>
+ConstListIterator<T>::ConstListIterator() : curr_(nullptr) {;}
+
+template <typename T>
+ConstListIterator<T>::ConstListIterator(const ConstIterator & i) : curr_(i.curr_){;}
+
+template <typename T>
+const T & ConstListIterator<T>::operator * () const {
+    if(curr_ != nullptr)
+        return curr_->val_;
+}
+
+template <typename T>
+ConstListIterator<T> & ConstListIterator<T>::operator = (const ConstIterator & i) {
+    curr_ = i.curr_;
+    return *this;
+}
+
+template <typename T>
+ConstListIterator<T> & ConstListIterator<T>::operator ++ () {
+    if(curr_ != nullptr)
+        curr_ = curr_->next_;
+    return *this;
+}
+
+template <typename T>
+const ConstListIterator<T> ConstListIterator<T>::operator ++ (int) {
+    ConstListIterator<T> copy = *this;
+    ++*this;
+    return copy;
+}
+
+template <typename T>
+ConstListIterator<T> & ConstListIterator<T>::operator -- () {
+    if(curr_ != nullptr)
+        curr_ = curr_->prev_;
+    return *this;
+}
+
+template <typename T>
+const ConstListIterator<T> ConstListIterator<T>::operator -- (int) {
+    ListIterator<T> copy = *this;
+    --*this;
+    return copy;
 }

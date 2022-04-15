@@ -9,15 +9,14 @@
 #include "queue.h"
 #include "graph.h"
 
+typedef ConstListIterator<int> CIterator;
 
 int main() {
-    Graph<int> G{};
-    G.readGraphFile();
-    G.Dump();
-    std::cout << std::endl;
-    G.bfs(5);
-
-
+    List<int> l;
+    l.PushBack(1); l.PushBack(2); l.PushBack(3);
+    ConstListIterator<int> i;
+    ConstListIterator<int> j(i);
+    std::cout << *i << ' ' << *j << '\n';
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
