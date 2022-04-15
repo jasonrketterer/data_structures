@@ -271,77 +271,6 @@ void List<T>::Dump(std::ostream &os) const {
 }
 
 /*********************************************
- *   ListIterator implementations
- *********************************************/
-
-template <typename T>
-ListIterator<T>::ListIterator() : curr_(nullptr){;}
-
-template <typename T>
-ListIterator<T>::ListIterator(const Iterator & i) : curr_(i.curr_){;}
-
-template <typename T>
-bool ListIterator<T>::operator == (const ListIterator& i2) const {
-    return curr_ == i2.curr_;
-}
-
-template <typename T>
-bool ListIterator<T>::operator != (const ListIterator& i2) const {
-    return !(*this == i2);
-}
-
-template <typename T>
-T & ListIterator<T>::operator * () {
-    if(curr_ != nullptr)
-        return curr_->val_;
-}
-
-template <typename T>
-const T & ListIterator<T>::operator * () const {
-    if(curr_ != nullptr)
-        return curr_->val_;
-}
-
-template <typename T>
-ListIterator<T> & ListIterator<T>::operator = (const Iterator & i) {
-    curr_ = i.curr_;
-    return *this;
-}
-
-template <typename T>
-ListIterator<T> & ListIterator<T>::operator ++ () {
-    if(curr_ != nullptr)
-        curr_ = curr_->next_;
-    return *this;
-}
-
-template <typename T>
-const ListIterator<T> ListIterator<T>::operator ++ (int) {
-    ListIterator<T> copy = *this;
-    ++*this;
-    return copy;
-}
-
-template <typename T>
-ListIterator<T> & ListIterator<T>::operator -- () {
-    if(curr_ != nullptr)
-        curr_ = curr_->prev_;
-    return *this;
-}
-
-template <typename T>
-const ListIterator<T> ListIterator<T>::operator -- (int) {
-    ListIterator<T> copy = *this;
-    --*this;
-    return copy;
-}
-
-template <typename T>
-void ListIterator<T>::Dump() const {
-    std::cout << "Iterator's curr address: " << curr_ << '\n';
-}
-
-/*********************************************
  *   ConstListIterator implementations
  *********************************************/
 
@@ -349,11 +278,21 @@ template <typename T>
 ConstListIterator<T>::ConstListIterator() : curr_(nullptr) {;}
 
 template <typename T>
-ConstListIterator<T>::ConstListIterator(const ConstIterator & i) : curr_(i.curr_){;}
+ConstListIterator<T>::ConstListIterator(const ConstIterator & i) : curr_(i.curr_) {;}
+
+template <typename T>
+bool ConstListIterator<T>::operator == (const ConstListIterator& i2) const {
+    return curr_ == i2.curr_;
+}
+
+template <typename T>
+bool ConstListIterator<T>::operator != (const ConstListIterator& i2) const {
+    return !(*this == i2);
+}
 
 template <typename T>
 const T & ConstListIterator<T>::operator * () const {
-    if(curr_ != nullptr)
+    if(Valid())
         return curr_->val_;
 }
 
@@ -390,3 +329,71 @@ const ConstListIterator<T> ConstListIterator<T>::operator -- (int) {
     --*this;
     return copy;
 }
+
+template <typename T>
+bool ConstListIterator<T>::Valid() const {
+    if(curr_ == nullptr) {
+        std::cerr << "**Invalid iterator dereference\n";
+        exit(EXIT_FAILURE);
+    }
+    return true;
+}
+
+template <typename T>
+void ConstListIterator<T>::Dump() const {
+    std::cout << "Iterator's curr address: " << curr_ << '\n';
+}
+
+/*********************************************
+ *   ListIterator implementations
+ *********************************************/
+
+template <typename T>
+ListIterator<T>::ListIterator() : ConstListIterator<T>(){;}
+
+template <typename T>
+ListIterator<T>::ListIterator(const Iterator & i) : ConstListIterator<T>(i){;}
+
+template <typename T>
+T & ListIterator<T>::operator * () {
+    if(ConstListIterator<T>::Valid())
+        return ConstListIterator<T>::curr_->val_;
+}
+
+template <typename T>
+const T & ListIterator<T>::operator * () const {
+    if(ConstListIterator<T>::Valid())
+        return ConstListIterator<T>::curr_->val_;
+}
+
+template <typename T>
+ListIterator<T> & ListIterator<T>::operator = (const Iterator & i) {
+    ConstListIterator<T>::operator=(i);
+    return *this;
+}
+
+template <typename T>
+ListIterator<T> & ListIterator<T>::operator ++ () {
+    ConstListIterator<T>::operator++();
+}
+
+template <typename T>
+const ListIterator<T> ListIterator<T>::operator ++ (int) {
+    ListIterator<T> copy = *this;
+    this->operator++();
+    return copy;
+}
+
+template <typename T>
+ListIterator<T> & ListIterator<T>::operator -- () {
+    ConstListIterator<T>::operator--();
+}
+
+template <typename T>
+const ListIterator<T> ListIterator<T>::operator -- (int) {
+    ListIterator<T> copy = *this;
+    this->operator--();
+    return copy;
+}
+
+

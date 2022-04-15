@@ -64,38 +64,41 @@ protected:
     class Node {
         friend class List<T>;
         friend class ListIterator<T>;
+        friend class ConstListIterator<T>;
 
         T val_;
         Node * prev_;
         Node * next_;
 
         explicit Node(const T & t) : val_(t), prev_(nullptr), next_(nullptr) {}
-
-        friend class ListIterator<T>;
     };
 
     Node * head_;
     Node * tail_;
     size_t size_;
+
+    friend class ListIterator<T>;
+    friend class ConstListIterator<T>;
 };
 
 template <typename T>
-class ListIterator {
+class ConstListIterator {
 public:
-    typedef ListIterator<T> Iterator;
+    typedef ConstListIterator<T> ConstIterator;
 
-    ListIterator();
-    ListIterator(const Iterator & i);
+    ConstListIterator();
+    ConstListIterator(const ConstIterator & i);
 
-    bool operator == (const ListIterator& i2) const;
-    bool operator != (const ListIterator& i2) const;
-    T & operator * ();
+    bool Valid() const;  // checks Iterator pointer before de-referencing
+
+    bool operator == (const ConstListIterator& i2) const;
+    bool operator != (const ConstListIterator& i2) const;
     const T & operator * () const;
-    ListIterator & operator = (const ListIterator & i);
-    ListIterator & operator ++ (); // prefix
-    const ListIterator operator ++ (int); // postfix
-    ListIterator & operator -- (); // prefix
-    const ListIterator operator -- (int); // postfix
+    ConstListIterator & operator = (const ConstListIterator & i);
+    ConstListIterator & operator ++ (); // prefix
+    const ConstListIterator operator ++ (int); // postfix
+    ConstListIterator & operator -- (); // prefix
+    const ConstListIterator operator -- (int); // postfix
 
 protected:
     typename List<T>::Node * curr_;
@@ -106,25 +109,29 @@ protected:
 };
 
 template <typename T>
-class ConstListIterator : public ListIterator<T> {
+class ListIterator : public ConstListIterator<T> {
 public:
     typedef ListIterator<T> Iterator;
     typedef ConstListIterator<T> ConstIterator;
 
-    ConstListIterator();
-    ConstListIterator(const ConstIterator & i);
+    ListIterator();
+    ListIterator(const Iterator & i);
+
+    // commented methods are inherited
 
     //bool operator == (const ListIterator& i2) const;
     //bool operator != (const ListIterator& i2) const;
+    T & operator * ();
     const T & operator * () const;
-    ConstListIterator & operator = (const ConstListIterator & i);
-    ConstListIterator & operator ++ (); // prefix
-    const ConstListIterator operator ++ (int); // postfix
-    ConstListIterator & operator -- (); // prefix
-    const ConstListIterator operator -- (int); // postfix
+    ListIterator & operator = (const ListIterator & i);
+    ListIterator & operator ++ (); // prefix
+    const ListIterator operator ++ (int); // postfix
+    ListIterator & operator -- (); // prefix
+    const ListIterator operator -- (int); // postfix
+
+    //bool Valid() const;  // checks Iterator pointer before de-referencing
 
 protected:
-    typename List<T>::Node * curr_;
 
     //void Dump() const;
 
