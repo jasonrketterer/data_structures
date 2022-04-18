@@ -1,3 +1,15 @@
+// STL-like Linked List
+//
+// Doubly linked list with iterator support
+//
+// Uses sentinel nodes for the head and tail
+// so that we can support bidirectional iterators.
+//
+// Unlike the STL std::list, this list is non-circular.
+// Incrementing/decrementing past either end or attempting to
+// dereference the head or tail node will throw an error.
+// It is up to the client to "know where they are" in the list by
+// using the iterator support.
 //
 // Created by Jason Ketterer on 4/4/22.
 //
@@ -25,7 +37,7 @@ public:
 
     void PushFront(const T & t);
     void PushBack(const T & t);
-    Iterator Insert(Iterator i, const T & t);
+    Iterator Insert(Iterator & i, const T & t);
 
     bool PopFront();
     bool PopBack();
@@ -56,7 +68,7 @@ public:
     ConstIterator rEnd() const;
 
     void Display(std::ostream & os = std::cout, char ofc = '\0') const;
-    void Dump(std::ostream & os = std::cout) const;
+    void Dump(std::ostream & os = std::cout) const; // displays detailed address info about each node
 
     friend class ListIterator<T>;
 
@@ -73,9 +85,16 @@ protected:
         explicit Node(const T & t) : val_(t), prev_(nullptr), next_(nullptr) {}
     };
 
+    // List data members
     Node * head_;
     Node * tail_;
     size_t size_;
+
+    // internal memory allocator for new nodes in the list; centralize exception handling
+    // we can also make the method static since it doesn't need access to any particular object's data
+    static Node * CreateNode(const T & t);
+
+
 
     friend class ListIterator<T>;
     friend class ConstListIterator<T>;
@@ -88,13 +107,13 @@ public:
 
     ConstListIterator();
     ConstListIterator(const ConstIterator & i);
+    ConstListIterator & operator = (const ConstListIterator & i);
 
     bool Valid() const;  // checks Iterator pointer before de-referencing
 
     bool operator == (const ConstListIterator& i2) const;
     bool operator != (const ConstListIterator& i2) const;
     const T & operator * () const;
-    ConstListIterator & operator = (const ConstListIterator & i);
     ConstListIterator & operator ++ (); // prefix
     const ConstListIterator operator ++ (int); // postfix
     ConstListIterator & operator -- (); // prefix
@@ -104,6 +123,8 @@ protected:
     typename List<T>::Node * curr_;
 
     void Dump() const;
+
+    static std::string invalid_iter_error_msg;
 
     friend class List<T>;
 };

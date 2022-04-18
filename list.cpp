@@ -1,17 +1,15 @@
-// Linked List
-//
-// Doubly linked list with sentinel nodes for
-// the head and tail.  Iterator support included.
 //
 // Created by Jason Ketterer on 4/4/22.
 //
 
 #include "list.h"
 
+
+
 template <typename T>
 List<T>::List() : head_(nullptr), tail_(nullptr), size_(0) {
-    head_ = new Node(T());
-    tail_ = new Node(T());
+    head_ = CreateNode(T());
+    tail_ = CreateNode(T());
     head_->next_ = tail_;
     tail_->prev_ = head_;
 }
@@ -42,6 +40,7 @@ void List<T>::Reverse() {
         curr->prev_ = temp;
         curr = temp;
     }
+    // swap head and tail
     temp = head_;
     head_ = tail_;
     tail_ = temp;
@@ -54,44 +53,50 @@ bool List<T>::Empty() const {
 
 template <typename T>
 void List<T>::PushFront(const T & t) {
-    Node * newNode = new Node(t);
+    Node * newNode = CreateNode(t);
+
+    // since head and tail are themselves nodes, no need to check for empty first
     head_->next_->prev_ = newNode;
     newNode->next_ = head_->next_;
     head_->next_ = newNode;
     newNode->prev_ = head_;
+
     ++size_;
 }
 
 template <typename T>
 void List<T>::PushBack(const T & t) {
-    Node * newNode = new Node(t);
+    Node * newNode = CreateNode(t);
+
+    // since head and tail are themselves nodes, no need to check for empty first
     tail_->prev_->next_ = newNode;
     newNode->prev_ = tail_->prev_;
     tail_->prev_ = newNode;
     newNode->next_ = tail_;
+
     ++size_;
 }
 
+// insert t in front of i
+// returns an iterator to the newly inserted element; points the argument iterator
+// to the first element past the newly inserted element
 template <typename T>
-ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
-    if(i == Begin() || i.curr_ == head_) {
-        PushFront(t);
-        i.curr_ = head_->next_;
-        return i;
+ListIterator<T> List<T>::Insert(Iterator & i, const T & t) {
+    if(!i.Valid() || i == rBegin()) {
+        std::cerr << "**Cannot insert at position pointed to by iterator\n";
+        return End();
     }
-    if(i == End() || i.curr_ == tail_->prev_) {
-        PushBack(t);
-        i.curr_ = tail_->prev_;
-        return i;
-    }
-    Node * newNode = new Node(t);
+    Node * newNode = CreateNode(t);
     newNode->prev_ = i.curr_;
     newNode->next_ = i.curr_->next_;
     newNode->next_->prev_ = newNode;
     newNode->prev_->next_ = newNode;
-    i.curr_ = newNode;
+    i.curr_ = newNode->next_;
     ++size_;
-    return i;
+
+    Iterator iNew;
+    iNew.curr_ = newNode;
+    return iNew;
 }
 
 template <typename T>
@@ -124,10 +129,11 @@ bool List<T>::PopBack() {
 
 template <typename T>
 ListIterator<T> List<T>::Remove(ListIterator<T> i) {
-    if(i.curr_ == nullptr || i.curr_ == head_ || i.curr_ == tail_) {
+    if(i.curr_ == nullptr || i == End() || i == rEnd()) {
         std::cerr << "Remove() called on invalid iterator\n";
         return i;
     }
+
     Node * temp = i.curr_;
     i.curr_ = i.curr_->next_;
     i.curr_->prev_ = temp->prev_;
@@ -270,15 +276,30 @@ void List<T>::Dump(std::ostream &os) const {
     os << "next: " << tail_->next_ << "\n\n";
 }
 
+template <typename T>
+typename List<T>::Node * List<T>::CreateNode(const T & t) {
+    Node * newNode = new(std::nothrow) Node(t);
+    if(newNode == nullptr) {
+        std::cerr << "**Unable to allocate memory for new Node\n";
+        return nullptr;
+    }
+    return newNode;
+}
+
 /*********************************************
  *   ConstListIterator implementations
  *********************************************/
 
 template <typename T>
-ConstListIterator<T>::ConstListIterator() : curr_(nullptr) {;}
+std::string ConstListIterator<T>::invalid_iter_error_msg = "**Operation called on invalid iterator";
 
 template <typename T>
-ConstListIterator<T>::ConstListIterator(const ConstIterator & i) : curr_(i.curr_) {;}
+ConstListIterator<T>::ConstListIterator() : curr_(nullptr)
+{;}
+
+template <typename T>
+ConstListIterator<T>::ConstListIterator(const ConstIterator & i) : curr_(i.curr_)
+{;}
 
 template <typename T>
 bool ConstListIterator<T>::operator == (const ConstListIterator& i2) const {
@@ -304,7 +325,7 @@ ConstListIterator<T> & ConstListIterator<T>::operator = (const ConstIterator & i
 
 template <typename T>
 ConstListIterator<T> & ConstListIterator<T>::operator ++ () {
-    if(curr_ != nullptr)
+    if(Valid())
         curr_ = curr_->next_;
     return *this;
 }
@@ -312,13 +333,13 @@ ConstListIterator<T> & ConstListIterator<T>::operator ++ () {
 template <typename T>
 const ConstListIterator<T> ConstListIterator<T>::operator ++ (int) {
     ConstListIterator<T> copy = *this;
-    ++*this;
+    (*this).operator++();
     return copy;
 }
 
 template <typename T>
 ConstListIterator<T> & ConstListIterator<T>::operator -- () {
-    if(curr_ != nullptr)
+    if(Valid())
         curr_ = curr_->prev_;
     return *this;
 }
@@ -326,15 +347,16 @@ ConstListIterator<T> & ConstListIterator<T>::operator -- () {
 template <typename T>
 const ConstListIterator<T> ConstListIterator<T>::operator -- (int) {
     ListIterator<T> copy = *this;
-    --*this;
+    (*this).operator--();
     return copy;
 }
 
 template <typename T>
 bool ConstListIterator<T>::Valid() const {
     if(curr_ == nullptr) {
-        std::cerr << "**Invalid iterator dereference\n";
-        exit(EXIT_FAILURE);
+        std::cerr << invalid_iter_error_msg << "\n";
+        //exit(EXIT_FAILURE);
+        return false;
     }
     return true;
 }
@@ -349,10 +371,12 @@ void ConstListIterator<T>::Dump() const {
  *********************************************/
 
 template <typename T>
-ListIterator<T>::ListIterator() : ConstListIterator<T>(){;}
+ListIterator<T>::ListIterator() : ConstListIterator<T>()
+{;}
 
 template <typename T>
-ListIterator<T>::ListIterator(const Iterator & i) : ConstListIterator<T>(i){;}
+ListIterator<T>::ListIterator(const Iterator & i) : ConstListIterator<T>(i)
+{;}
 
 template <typename T>
 T & ListIterator<T>::operator * () {
@@ -375,6 +399,7 @@ ListIterator<T> & ListIterator<T>::operator = (const Iterator & i) {
 template <typename T>
 ListIterator<T> & ListIterator<T>::operator ++ () {
     ConstListIterator<T>::operator++();
+    return *this;
 }
 
 template <typename T>
@@ -387,6 +412,7 @@ const ListIterator<T> ListIterator<T>::operator ++ (int) {
 template <typename T>
 ListIterator<T> & ListIterator<T>::operator -- () {
     ConstListIterator<T>::operator--();
+    return *this;
 }
 
 template <typename T>

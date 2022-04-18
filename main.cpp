@@ -11,24 +11,15 @@
 
 int main() {
     List<int> l;
-    l.PushBack(1); l.PushBack(2); l.PushBack(3);
-    ConstListIterator<int> i = l.Begin();
-    ListIterator<int> j = l.Begin();
-    i = j;
+    l.PushFront(0); l.PushBack(1); l.PushBack(2); l.PushBack(3);
+    ListIterator<int> i = l.Begin(); ++i;
+    l.Insert(i,0);
     std::cout << *i << '\n';
 
-    /*
-    std::list<int> l1(5);
-    std::list<int>::iterator i1 = l1.begin();
-    std::list<int>::const_iterator i2 = l1.begin();
-    i1 = i2;
-    *i2;
+    for(ListIterator<int> j = l.Begin(); j != l.End(); ++j)
+        std::cout << *j << ' ';
+    std::cout << '\n';
 
-    ConstListIterator<int> j = l.Begin();
-    std::cout << *i << ' ' << *j << '\n';
-    if( i == j)
-        std::cout << "the iterators are equal\n";
-        */
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
@@ -38,7 +29,9 @@ int main() {
     for (it=mylist.begin() ; it != mylist.end(); ++it)
         std::cout << ' ' << *it;
     std::cout << '\n';
+    it = mylist.begin();
     mylist.insert(it,0);
+    std::cout << *it << '\n';
     for (it=mylist.begin() ; it != mylist.end(); ++it)
         std::cout << ' ' << *it;
     std::cout << '\n';
