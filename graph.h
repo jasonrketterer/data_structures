@@ -23,11 +23,11 @@ public:
 
     void SetVertexSize(size_t n);
     void AddEdge(Vertex from, Vertex to);
-    bool HasEdge(Vertex from, Vertex to);
+    bool HasEdge(Vertex from, Vertex to) const;
     size_t VertexSize() const { return n_; }
-    size_t EdgeSize();
-    size_t InDegree(Vertex v);
-    size_t OutDegree(Vertex v);
+    size_t EdgeSize() const;
+    size_t InDegree(Vertex v) const;
+    size_t OutDegree(Vertex v) const;
 
     void dfsIter(Vertex src); // iterative version
     void dfs(Vertex src);  // recursive version

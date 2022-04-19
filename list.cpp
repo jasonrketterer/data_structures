@@ -22,6 +22,15 @@ List<T>::~List() {
 }
 
 template <typename T>
+List<T> & List<T>::operator=(const List & rhs) {
+    if(this != &rhs) {
+        Clear();
+        Append(rhs);
+    }
+    return *this;
+}
+
+template <typename T>
 void List<T>::Clear() {
     while(!Empty())
         PopFront();
@@ -44,6 +53,20 @@ void List<T>::Reverse() {
     temp = head_;
     head_ = tail_;
     tail_ = temp;
+}
+
+// in place sort, O(n_^2)
+template <typename T>
+void List<T>::Sort() {
+    // maintain 2 iterators: 1 to iterate through list, 1 for insert position
+    ListIterator<T> i, insertPosition;
+    T largest; int n;
+
+    insertPosition = End();
+    for(n = 1, i = Begin(), largest = *i; n <= Size(); ++n) {
+        for(++i; i != insertPosition; ++i) { ;
+        }
+    }
 }
 
 template <typename T>
@@ -77,26 +100,55 @@ void List<T>::PushBack(const T & t) {
     ++size_;
 }
 
-// insert t in front of i
-// returns an iterator to the newly inserted element; points the argument iterator
-// to the first element past the newly inserted element
+// insert t behind i
+// returns an iterator to the newly inserted element;
+// argument iterator still points to the same element behind which we inserted
 template <typename T>
-ListIterator<T> List<T>::Insert(Iterator & i, const T & t) {
+ListIterator<T> List<T>::Insert(Iterator i, const T & t) {
     if(!i.Valid() || i == rBegin()) {
         std::cerr << "**Cannot insert at position pointed to by iterator\n";
         return End();
     }
     Node * newNode = CreateNode(t);
-    newNode->prev_ = i.curr_;
-    newNode->next_ = i.curr_->next_;
-    newNode->next_->prev_ = newNode;
-    newNode->prev_->next_ = newNode;
-    i.curr_ = newNode->next_;
+    newNode->next_ = i.curr_;
+    newNode->prev_ = i.curr_->prev_;
+    i.curr_->prev_->next_ = newNode;
+    i.curr_->prev_ = newNode;
+
     ++size_;
 
     Iterator iNew;
     iNew.curr_ = newNode;
     return iNew;
+}
+
+// insert t behind i
+// returns an iterator to the newly inserted element;
+// argument iterator still points to the same element behind which we inserted
+template <typename T>
+ConstListIterator<T> List<T>::Insert(ConstIterator i, const T & t) {
+    if(!i.Valid() || i == rBegin()) {
+        std::cerr << "**Cannot insert at position pointed to by iterator\n";
+        return End();
+    }
+    Node * newNode = CreateNode(t);
+    newNode->next_ = i.curr_;
+    newNode->prev_ = i.curr_->prev_;
+    i.curr_->prev_->next_ = newNode;
+    i.curr_->prev_ = newNode;
+
+    ++size_;
+
+    ConstIterator iNew;
+    iNew.curr_ = newNode;
+    return iNew;
+}
+
+template <typename T>
+List<T> & List<T>::operator+=(const List & list) {
+    if(this != &list)  // can't append to self, otherwise we'll enter infinite loop
+        Append(list);
+    return *this;
 }
 
 template <typename T>
@@ -284,6 +336,36 @@ typename List<T>::Node * List<T>::CreateNode(const T & t) {
         return nullptr;
     }
     return newNode;
+}
+
+template <typename T>
+void List<T>::Append(const List<T> & list) {
+    ConstIterator i = list.Begin();
+    for(; i != list.End(); ++i)
+        PushBack(*i);
+}
+
+template <typename T>
+bool operator == (const List<T>& list1, const List<T>& list2) {
+    if(list1.Size() != list2.Size())
+        return false;
+
+    ConstListIterator<T> i1, i2;
+    for(i1 = list1.Begin(), i2 = list2.Begin(); i1 != list1.End(); ++i1, ++i2)
+        if(*i1 != *i2)
+            return false;
+    return true;
+}
+
+template <typename T>
+bool operator != (const List<T>& list1, const List<T>& list2) {
+    return !(list1 == list2);
+}
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const List<T>& list) {
+    list.Display(os);
+    return os;
 }
 
 /*********************************************

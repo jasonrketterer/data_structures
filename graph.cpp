@@ -19,15 +19,15 @@ void Graph<T>::AddEdge(Vertex from, Vertex to) {
 }
 
 template <typename T>
-bool Graph<T>::HasEdge(Vertex from, Vertex to) {
-    for(ListIterator<T> i = g_[from].Begin(); i != g_[from].End(); ++i)
+bool Graph<T>::HasEdge(Vertex from, Vertex to) const {
+    for(ConstListIterator<T> i = g_[from].Begin(); i != g_[from].End(); ++i)
         if(*i == to)
             return true;
     return false;
 }
 
 template <typename T>
-size_t Graph<T>::EdgeSize() {
+size_t Graph<T>::EdgeSize() const {
     size_t edges = 0;
     for(size_t v = 0; v < n_; ++v)
         edges += g_[v].Size();
@@ -35,10 +35,10 @@ size_t Graph<T>::EdgeSize() {
 }
 
 template <typename T>
-size_t Graph<T>::InDegree(Vertex v) {
+size_t Graph<T>::InDegree(Vertex v) const {
     size_t indeg = 0;
     for(Vertex n = 0; n < VertexSize(); ++n) {
-        for(ListIterator<T> i = g_[n].Begin(); i != g_[n].End(); ++i) {
+        for(ConstListIterator<T> i = g_[n].Begin(); i != g_[n].End(); ++i) {
             if(*i == v)
                 ++indeg;
         }
@@ -47,7 +47,7 @@ size_t Graph<T>::InDegree(Vertex v) {
 }
 
 template <typename T>
-size_t Graph<T>::OutDegree(Vertex v) {
+size_t Graph<T>::OutDegree(Vertex v) const {
     return g_[v].Size();
 }
 

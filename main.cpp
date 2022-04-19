@@ -10,16 +10,11 @@
 #include "graph.h"
 
 int main() {
-    List<int> l;
-    l.PushFront(0); l.PushBack(1); l.PushBack(2); l.PushBack(3);
-    ListIterator<int> i = l.Begin(); ++i;
-    l.Insert(i,0);
-    std::cout << *i << '\n';
-
-    for(ListIterator<int> j = l.Begin(); j != l.End(); ++j)
-        std::cout << *j << ' ';
-    std::cout << '\n';
-
+    List<int> l1, l2;
+    l1.PushBack(1); l1.PushBack(2); l1.PushBack(3);
+    l2.PushBack(4); l2.PushBack(5); l2.PushBack(6);
+    l1 += l2;
+    std::cout << l1;
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

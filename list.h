@@ -32,18 +32,22 @@ public:
     typedef ConstListIterator<T> ConstIterator;
 
     List();
-    ~List();
-    //List & operator=(const List &); // assignment
+    virtual ~List();
+    List & operator=(const List & rhs); // assignment
 
     void PushFront(const T & t);
     void PushBack(const T & t);
-    Iterator Insert(Iterator & i, const T & t);
+    Iterator Insert(Iterator i, const T & t);
+    ConstIterator Insert(ConstIterator i, const T & t);
+
+    List & operator+=(const List & list);  // append a (deep) copy of list
 
     bool PopFront();
     bool PopBack();
     Iterator Remove(Iterator i);
     void Clear();
 
+    void Sort();
     void Reverse();
 
     size_t Size() const;
@@ -94,11 +98,24 @@ protected:
     // we can also make the method static since it doesn't need access to any particular object's data
     static Node * CreateNode(const T & t);
 
+    // add the nodes in list to the end of this list
+    void Append(const List<T> & list);
 
 
     friend class ListIterator<T>;
     friend class ConstListIterator<T>;
 };
+
+// global scope operators
+
+template <typename T>
+bool operator == (const List<T>& list1, const List<T>& list2);
+
+template <typename T>
+bool operator != (const List<T>& list1, const List<T>& list2);
+
+template <typename T>
+std::ostream& operator << (std::ostream& os, const List<T>& list);
 
 template <typename T>
 class ConstListIterator {
