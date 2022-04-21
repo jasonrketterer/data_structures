@@ -8,13 +8,13 @@
 #include "stack.h"
 #include "queue.h"
 #include "graph.h"
+#include "bst.h"
 
 int main() {
-    List<int> l1, l2;
-    l1.PushBack(1); l1.PushBack(2); l1.PushBack(3);
-    l2.PushBack(4); l2.PushBack(5); l2.PushBack(6);
-    l1 += l2;
-    std::cout << l1;
+    BST<int> tree;
+    tree.Insert(7); tree.Insert(1); tree.Insert(5);
+    tree.Insert(8); tree.Insert(0); tree.Insert(4);tree.Insert(6); tree.Insert(9);
+    tree.Dump(std::cout, 3, ' ');
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

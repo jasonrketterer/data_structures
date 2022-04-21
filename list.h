@@ -49,6 +49,9 @@ public:
 
     void Sort();
     void Reverse();
+    void removeDuplicates();
+
+    void sumLists(List<T> & list1, List<T> & list2);
 
     size_t Size() const;
     bool Empty() const;

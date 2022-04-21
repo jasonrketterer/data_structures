@@ -3,8 +3,7 @@
 //
 
 #include "list.h"
-
-
+#include <map>
 
 template <typename T>
 List<T>::List() : head_(nullptr), tail_(nullptr), size_(0) {
@@ -67,6 +66,39 @@ void List<T>::Sort() {
         for(++i; i != insertPosition; ++i) { ;
         }
     }
+}
+
+template <typename T>
+void List<T>::removeDuplicates() {
+    std::map<T,bool> dupmap;
+    std::pair<std::map<int,bool>::iterator, bool> result;
+    ListIterator<int> i = Begin();
+    while(i != End()) {
+        result = dupmap.insert(std::pair<T,bool>(*i, true));
+        if(result.second == false) // key was already added, i.e. a duplicate exists
+            i = Remove(i);
+        else
+            ++i;
+    }
+}
+
+template <typename T>
+void List<T>::sumLists(List<T> & list1, List<T> & list2) {
+    List<T> result;
+    int sum, carry = 0;
+    ListIterator<T> i1, i2;
+    for(i1=list1.rBegin(), i2=list2.rBegin(); i1!=list1.rEnd(); --i1, --i2) {
+        sum = *i1 + *i2 + carry;
+        if(sum > 9) {
+            sum -= 10;
+            carry = 1;
+        }
+        else
+            carry = 0;
+        result.PushFront(sum);
+    }
+    if (carry) result.PushBack(carry);
+    std::cout << result;
 }
 
 template <typename T>
@@ -185,7 +217,6 @@ ListIterator<T> List<T>::Remove(ListIterator<T> i) {
         std::cerr << "Remove() called on invalid iterator\n";
         return i;
     }
-
     Node * temp = i.curr_;
     i.curr_ = i.curr_->next_;
     i.curr_->prev_ = temp->prev_;
