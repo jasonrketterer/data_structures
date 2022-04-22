@@ -3,12 +3,18 @@
 //
 
 #include <iostream>
+#include <algorithm>
+#include <math.h>
 #include "queue.h"
+#include "list.h"
 #include "bst.h"
 
 template <typename T>
 BST<T>::~BST() {
-    ;
+    if(root_ != nullptr) {
+        Clear(root_);
+        root_ = nullptr;
+    }
 }
 
 template <typename T>
@@ -18,155 +24,141 @@ void BST<T>::Insert(const T & t) {
 
 template <typename T>
 void BST<T>::Remove(const T & t) {
-    ;
-}
-
-template < typename T >
-void BST<T>::Dump (std::ostream& os, int dw, char fill) const
-{
-    // fsu::debug ("Dump(3)");
-    if (root_ == nullptr)
-        return;
-
-    Node* fillNode = CreateNode(T());
-    Queue < Node * > Que;
-    Node * current;
-    size_t currLayerSize, nextLayerSize, j, k;
-    Que.Push(root_);
-    currLayerSize = 1;
-    k = 1;  // 2^LayerNumber
-    while (currLayerSize > 0)
-    {
-        nextLayerSize = 0;
-        if (dw == 1) os << ' '; // indent picture 1 space
-        for (j = 0; j < k; ++j)
-        {
-            current = Que.Front();
-            Que.Pop();
-            if (dw > 1) os << ' '; // indent each column 1 space
-            if (current == fillNode)
-            {
-                os << std::setw(dw) << fill;
-            }
-            else
-            {
-                os<< std::setw(dw) << current->val_;
-            }
-
-            if (current->lchild_)
-            {
-                Que.Push(current->lchild_);
-                ++nextLayerSize;
-            }
-            else
-            {
-                Que.Push(fillNode);
-            }
-            if (current->rchild_)
-            {
-                Que.Push(current->rchild_);
-                ++nextLayerSize;
-            }
-            else
-            {
-                Que.Push(fillNode);
-            }
-        }
-        os << '\n';
-        currLayerSize = nextLayerSize;
-        k *= 2;
-    } // end while
-    //Que.Clear();
-    delete fillNode;
+    RRemove(root_, t);
 }
 
 template <typename T>
-void BST<T>::Dump (std::ostream& os) const {
-    if (root_ == nullptr)
-        return;
+void BST<T>::Clear() {
+    Clear(root_);
+}
 
-    // we will use "root" as the placeholder node; test for dummy by address
-    Queue <Node *> Que;
-    char nullFill = '-';
-    char nodeFill = '*';
-    Node * fillNode = root_;
-    Node * current;
+template <typename T>
+size_t BST<T>::Height() const {
+    if(root_ == nullptr) return 0;
+    return RHeight(root_) - 1;
+    // we subtract 1 because RHeight counts the root but root is at height 0
+}
 
-    size_t currLayerSize, nextLayerSize, j, k;
-    currLayerSize = 1;
-    k = 1;  // 2^LayerNumber
-    Que.Push(root_);
+template <typename T>
+size_t BST<T>::Size() const {
+    if(root_ == nullptr) return 0;
+    return RSize(root_);
+}
 
-    // execute body once for "real" root:
-    os << ' '; // 1-space left margin for graphic
-    nextLayerSize = 0;
-    current = Que.Front();
-    Que.Pop();
-    os << nodeFill;
-    if (current->lchild_)
-    {
-        Que.Push(current->lchild_);
-        ++nextLayerSize;
-    }
-    else
-    {
-        Que.Push(fillNode);
-    }
-    if (current->rchild_)
-    {
-        Que.Push(current->rchild_);
-        ++nextLayerSize;
-    }
-    else
-    {
-        Que.Push(fillNode);
-    }
-    os << '\n';
-    currLayerSize = nextLayerSize;
-    k *= 2;
+template <typename T>
+void BST<T>::printHTree() const {
+    RPrintHTree(root_, 0);
+}
 
-    // now finish off, using address to detect fillNode.
-    while (currLayerSize > 0)
-    {
-        nextLayerSize = 0;
-        os << ' '; // 1-space left margin for graphic
-        for (j = 0; j < k; ++j)
-        {
-            current = Que.Front();
-            Que.Pop();
-            if (current == fillNode) // an empty position in the tree
-                os << nullFill;
-            else
-                os << nodeFill;
-            if (current != fillNode && current->lchild_)
-            {
-                Que.Push(current->lchild_);
-                ++nextLayerSize;
-            }
-            else
-            {
-                Que.Push(fillNode);
-            }
-            if (current != fillNode && current->rchild_)
-            {
-                Que.Push(current->rchild_);
-                ++nextLayerSize;
-            }
-            else
-            {
-                Que.Push(fillNode);
-            }
-        } // end for
-        os << '\n';
-        currLayerSize = nextLayerSize;
-        k *= 2;
-    } // end while
-    //Que.Clear();
-} // Dump(os)
+template <typename T>
+void BST<T>::printVTree() const {
+    List<Node *> treeLevel;
+    treeLevel.PushFront(root_);
+    List<Node *> temp;
+    int counter = 0;
+    int height = Height();
+    double numOfNodes = pow(2, height+1) - 1;
+    while(counter <= height) {
+        Node * removed = treeLevel.Front();
+        treeLevel.PopFront();
+        if(temp.Empty())
+            printSpace(numOfNodes / pow(2, counter+1), removed);
+        else
+            printSpace(numOfNodes / pow(2, counter), removed);
+        if(removed == nullptr) {
+            temp.PushBack(nullptr);
+            temp.PushBack(nullptr);
+        }
+        else {
+            temp.PushBack(removed->lchild_);
+            temp.PushBack(removed->rchild_);
+        }
+        if(treeLevel.Empty()) {
+            std::cout << "\n";
+            std::cout << "\n";
+            treeLevel = temp;
+            temp.Clear();
+            ++counter;
+        }
+    }
+}
 
 /*************************************
  * Protected methods
  *************************************/
+
+template <typename T>
+typename BST<T>::Node * BST<T>::findMin(Node * n) const {
+    if(n == nullptr)
+        return nullptr;
+    while(n->lchild_ != nullptr) {
+        n = n->lchild_;
+    }
+    return n;
+}
+
+template <typename T>
+typename BST<T>::Node * BST<T>::findMax(Node * n) const {
+    if(n == nullptr)
+        return nullptr;
+    while(n->rchild_ != nullptr) {
+        n = n->rchild_;
+    }
+    return n;
+}
+
+template <typename T>
+void BST<T>::printSpace(double n, Node * removed) const {
+    for(; n > 0; --n)
+        std::cout << '\t';
+    if(removed == nullptr)
+        std::cout << ' ';
+    else
+        std::cout << removed->val_;
+}
+
+template <typename T>
+size_t BST<T>::RHeight(Node * n) const {
+    if(n == nullptr)
+        return 0;
+    return std::max(RHeight(n->lchild_), RHeight(n->rchild_)) + 1;
+}
+
+template <typename T>
+size_t BST<T>::RSize(Node * n) const {
+    if(n == nullptr)
+        return 0;
+    size_t lsize = 0, rsize = 0;
+    if(n->lchild_)
+        lsize = RSize(n->lchild_);
+    if(n->rchild_)
+        rsize = RSize(n->rchild_);
+    return 1 + lsize + rsize;  // node counts itself and then adds the number of nodes in its left/right subtrees
+}
+
+template <typename T>
+void BST<T>::RPrintHTree(Node * n, int space) const {
+    int COUNT = 5;
+    // Base case
+    if (n == NULL)
+        return;
+
+    // Increase distance between levels
+    space += COUNT;
+
+    // Process right child first
+    RPrintTree(n->rchild_, space);
+
+    // Print current node after space
+    // count
+    std::cout<<'\n';
+    for (int i = COUNT; i < space; i++)
+        std::cout<<" ";
+    std::cout<<n->val_<<"\n";
+
+    // Process left child
+    RPrintTree(n->lchild_, space);
+}
 
 template <typename T>
 typename BST<T>::Node * BST<T>::CreateNode(const T & t) {
@@ -191,4 +183,44 @@ void BST<T>::RInsert(Node * & n, const T & t) {
         RInsert(n->rchild_, t);
     else // value already exists in the tree, do nothing
         return;
+}
+
+template<typename T>
+void BST<T>::RRemove(BST::Node *&n, const T &t) {
+    if(n == nullptr) // t not found; do nothing
+        return;
+    if(t < n->val_)
+        RRemove(n->lchild_, t);
+    else if(t > n->val_)
+        RRemove(n->rchild_, t);
+    else { // we found the node to remove
+        if(n->lchild_ != nullptr && n->rchild_ != nullptr) {
+            // node to remove has 2 children
+            // need to find largest value in left subtree or smallest value
+            // in right subtree, copy it to the node we want to delete and then
+            // delete the node we just copied (to prevent a duplicate)
+            n->val_ = findMin(n->rchild_)->val_;
+            RRemove(n->rchild_, n->val_);
+        }
+        else {
+            // the node we want to remove has 1 or 0 children
+            // delete the node and adjust the left or right child pointer
+            Node * removeNode = n;
+            // if the removeNode has no children, n will get set to null
+            n = (n->lchild_ != nullptr) ? n->lchild_ : n->rchild_;
+            delete removeNode;
+        }
+    }
+}
+
+template<typename T>
+void BST<T>::Clear(BST::Node *&n) {
+    if(n == nullptr)
+        return;
+    if(n->lchild_ != nullptr)
+        Clear(n->lchild_);
+    if(n->rchild_ != nullptr)
+        Clear(n->rchild_);
+    delete n;
+    n = nullptr;
 }

@@ -19,9 +19,13 @@ public:
 
     void Insert(const T & t);
     void Remove(const T & t);
+    void Clear();
 
-    void Dump (std::ostream& os, int dw, char fill) const;
-    void Dump (std::ostream& os = std::cout) const;
+    size_t Height() const;
+    size_t Size() const;
+
+    void printHTree() const; // print horizontal tree
+    void printVTree() const; // print vertical tree
 
 protected:
     class Node {
@@ -40,7 +44,16 @@ protected:
     // we can also make the method static since it doesn't need access to any particular object's data
     static Node * CreateNode(const T & t);
 
+    Node * findMin(Node * n) const;
+    Node * findMax(Node * n) const;
+    size_t RHeight(Node * n) const;
+    size_t RSize(Node * n) const;
     void RInsert(Node * & n, const T & t);
+    void RRemove(Node * & n, const T & t);
+
+    void RPrintHTree(Node * n, int space) const;
+    void printSpace(double n, Node * removed) const; // helper function for printVTree()
+    void Clear(Node * & n);
 };
 
 #include "bst.cpp"

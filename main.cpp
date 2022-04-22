@@ -11,10 +11,20 @@
 #include "bst.h"
 
 int main() {
-    BST<int> tree;
-    tree.Insert(7); tree.Insert(1); tree.Insert(5);
-    tree.Insert(8); tree.Insert(0); tree.Insert(4);tree.Insert(6); tree.Insert(9);
-    tree.Dump(std::cout, 3, ' ');
+    BST<int> t;
+    t.Insert(8); t.Insert(1); t.Insert(12);
+    t.Insert(5); t.Insert(0); t.Insert(4);
+    t.Insert(6);  t.Insert(10); t.Insert(11);
+    t.Insert(9); t.Insert(13);
+    t.printVTree();
+    std::cout << "\nTree height is " << t.Height() << '\n';
+    std::cout << "The number of nodes is " << t.Size() << '\n';
+    //t.Remove(8);
+    t.Clear();
+    std::cout << '\n';
+    t.printVTree();
+    std::cout << "\nTree height is " << t.Height() << '\n';
+    std::cout << "The number of nodes is " << t.Size() << '\n';
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
