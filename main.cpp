@@ -17,14 +17,16 @@ int main() {
     t.Insert(6);  t.Insert(10); t.Insert(11);
     t.Insert(9); t.Insert(13);
     t.printVTree();
-    std::cout << "\nTree height is " << t.Height() << '\n';
-    std::cout << "The number of nodes is " << t.Size() << '\n';
-    //t.Remove(8);
-    t.Clear();
+    //std::cout << "\nTree height is " << t.Height() << '\n';
+    //std::cout << "The number of nodes is " << t.Size() << '\n';
+    std::cout << '\n';
+    int i;
+    i = t.Get(10);
+    std::cout << "Called Get(10) and it returned " << i << '\n';
+    i = t.Get(3);
+    std::cout << "Called Get(3) and it returned " << i << '\n';
     std::cout << '\n';
     t.printVTree();
-    std::cout << "\nTree height is " << t.Height() << '\n';
-    std::cout << "The number of nodes is " << t.Size() << '\n';
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

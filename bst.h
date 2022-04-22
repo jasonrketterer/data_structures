@@ -19,6 +19,8 @@ public:
 
     void Insert(const T & t);
     void Remove(const T & t);
+    bool Contains(const T & t) const;
+    T & Get(const T & t);  // inserts t if not in the tree
     void Clear();
 
     size_t Height() const;
@@ -50,6 +52,8 @@ protected:
     size_t RSize(Node * n) const;
     void RInsert(Node * & n, const T & t);
     void RRemove(Node * & n, const T & t);
+    bool RContains(Node * n, const T & t) const;
+    T & RGet(Node * & n, const T & t);
 
     void RPrintHTree(Node * n, int space) const;
     void printSpace(double n, Node * removed) const; // helper function for printVTree()

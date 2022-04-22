@@ -27,6 +27,16 @@ void BST<T>::Remove(const T & t) {
     RRemove(root_, t);
 }
 
+template<typename T>
+bool BST<T>::Contains(const T &t) const {
+    return RContains(root_, t);
+}
+
+template<typename T>
+T & BST<T>::Get(const T &t) {
+    return RGet(root_, t);
+}
+
 template <typename T>
 void BST<T>::Clear() {
     Clear(root_);
@@ -224,3 +234,35 @@ void BST<T>::Clear(BST::Node *&n) {
     delete n;
     n = nullptr;
 }
+
+template<typename T>
+bool BST<T>::RContains(BST::Node * n, const T &t) const {
+    if(n == nullptr)
+        return false;
+    else if(t < n->val_)
+        return RContains(n->lchild_, t);
+    else if(t > n->val_)
+        return RContains(n->rchild_, t);
+    else
+        return true;
+}
+
+template<typename T>
+T & BST<T>::RGet(BST::Node * & n, const T &t) {
+    if(n == nullptr) {
+        // we have found where to insert t
+        Node * newNode = CreateNode(t);
+        n = newNode;
+        return n->val_;
+    }
+    if(t < n->val_)
+        return RGet(n->lchild_, t);
+    else if(t > n->val_)
+        return RGet(n->rchild_, t);
+    else // t already in the tree
+        return n->val_;
+}
+
+
+
+
