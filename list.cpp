@@ -6,6 +6,9 @@
 #include <map>
 
 template <typename T>
+std::string List<T>::POP_FRONT_ERR_MSG = "** PopFront called on empty List\n";
+
+template <typename T>
 List<T>::List() : head_(nullptr), tail_(nullptr), size_(0) {
     head_ = CreateNode(T());
     tail_ = CreateNode(T());
@@ -75,7 +78,7 @@ void List<T>::removeDuplicates() {
     ListIterator<int> i = Begin();
     while(i != End()) {
         result = dupmap.insert(std::pair<T,bool>(*i, true));
-        if(result.second == false) // key was already added, i.e. a duplicate exists
+        if(!result.second) // key was already added, i.e. a duplicate exists
             i = Remove(i);
         else
             ++i;
@@ -186,7 +189,7 @@ List<T> & List<T>::operator+=(const List & list) {
 template <typename T>
 bool List<T>::PopFront() {
     if(Empty()) {
-        std::cerr << "**PopFront called on empty List\n";
+        std::cerr << POP_FRONT_ERR_MSG << '\n';
         return false;
     }
     Node * temp = head_->next_;
@@ -332,12 +335,12 @@ void List<T>::Display(std::ostream & os, char ofc) const {
             os << curr->val_ << " , ";
             curr = curr->next_;
         }
-        os << curr->val_ << '\n';
+        os << curr->val_;
         //os << ']';
         //os << std::endl;
     }
     else
-        std::cout << std::endl;
+        os << "";
 }
 
 template <typename T>

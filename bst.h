@@ -9,10 +9,17 @@
 #define BST_H
 
 #include <iostream>
+#include "bst_iter.h"
+
+template <class C>
+class LevelOrderBTIterator;
 
 template <typename T>
 class BST {
 public:
+    typedef T ValueType;
+    typedef LevelOrderBTIterator < BST<T> > LevelOrderIterator;
+
     BST() : root_(nullptr) {;}
     virtual ~BST();
     //BST & operator= (const BST & rhs);  // disabling assignment for now
@@ -25,6 +32,12 @@ public:
 
     size_t Height() const;
     size_t Size() const;
+
+    // standard traversals
+    void PreOrder() const;
+    void InOrder() const;
+    void PostOrder() const;
+    void LevelOrder() const;
 
     void printHTree() const; // print horizontal tree
     void printVTree() const; // print vertical tree
@@ -55,8 +68,13 @@ protected:
     bool RContains(Node * n, const T & t) const;
     T & RGet(Node * & n, const T & t);
 
+    void RPreOrder(Node * n) const;
+    void RInOrder(Node * n) const;
+    void RPostOrder(Node * n) const;
+
     void RPrintHTree(Node * n, int space) const;
     void printSpace(double n, Node * removed) const; // helper function for printVTree()
+
     void Clear(Node * & n);
 };
 

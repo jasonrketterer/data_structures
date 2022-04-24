@@ -31,6 +31,10 @@ public:
     typedef ListIterator<T> Iterator;
     typedef ConstListIterator<T> ConstIterator;
 
+    friend class ListIterator<T>;
+    friend class ConstListIterator<T>;
+    friend class ListTest;
+
     List();
     virtual ~List();
     List & operator=(const List & rhs); // assignment
@@ -77,8 +81,6 @@ public:
     void Display(std::ostream & os = std::cout, char ofc = '\0') const;
     void Dump(std::ostream & os = std::cout) const; // displays detailed address info about each node
 
-    friend class ListIterator<T>;
-
 protected:
     class Node {
         friend class List<T>;
@@ -104,9 +106,8 @@ protected:
     // add the nodes in list to the end of this list
     void Append(const List<T> & list);
 
-
-    friend class ListIterator<T>;
-    friend class ConstListIterator<T>;
+    // Error messages
+    static std::string POP_FRONT_ERR_MSG;
 };
 
 // global scope operators

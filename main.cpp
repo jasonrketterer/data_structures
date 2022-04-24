@@ -9,24 +9,21 @@
 #include "queue.h"
 #include "graph.h"
 #include "bst.h"
+#include "list_test.h"
 
 int main() {
+
     BST<int> t;
     t.Insert(8); t.Insert(1); t.Insert(12);
     t.Insert(5); t.Insert(0); t.Insert(4);
     t.Insert(6);  t.Insert(10); t.Insert(11);
     t.Insert(9); t.Insert(13);
     t.printVTree();
+    t.LevelOrder();
+    std::cout << '\n';
     //std::cout << "\nTree height is " << t.Height() << '\n';
     //std::cout << "The number of nodes is " << t.Size() << '\n';
-    std::cout << '\n';
-    int i;
-    i = t.Get(10);
-    std::cout << "Called Get(10) and it returned " << i << '\n';
-    i = t.Get(3);
-    std::cout << "Called Get(3) and it returned " << i << '\n';
-    std::cout << '\n';
-    t.printVTree();
+
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);

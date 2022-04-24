@@ -56,6 +56,42 @@ size_t BST<T>::Size() const {
 }
 
 template <typename T>
+void BST<T>::PreOrder() const {
+    std::cout << "Preorder traversal: \n";
+    RPreOrder(root_);
+}
+
+template <typename T>
+void BST<T>::InOrder() const {
+    std::cout << "Inorder traversal: \n";
+    RInOrder(root_);
+}
+
+template <typename T>
+void BST<T>::PostOrder() const {
+    std::cout << "Postorder traversal: \n";
+    RPostOrder(root_);
+}
+
+template <typename T>
+void BST<T>::LevelOrder() const {
+    std::cout << "Levelorder traversal: \n";
+    if(root_ == nullptr) return;
+    Queue<Node *> q;
+    q.Push(root_);
+    Node * front;
+    while(!q.Empty()) {
+        front = q.Front();
+        if(front != nullptr) {
+            q.Push(front->lchild_);
+            q.Push(front->rchild_);
+            std::cout << front->val_ << ' ';
+        }
+        q.Pop();
+    }
+}
+
+template <typename T>
 void BST<T>::printHTree() const {
     RPrintHTree(root_, 0);
 }
@@ -261,6 +297,30 @@ T & BST<T>::RGet(BST::Node * & n, const T &t) {
         return RGet(n->rchild_, t);
     else // t already in the tree
         return n->val_;
+}
+
+template<typename T>
+void BST<T>::RPreOrder(BST::Node *n) const {
+    if(n == nullptr) return;
+    std::cout << n->val_ << ' ';
+    RPreOrder(n->lchild_);
+    RPreOrder(n->rchild_);
+}
+
+template<typename T>
+void BST<T>::RInOrder(BST::Node *n) const {
+    if(n == nullptr) return;
+    RInOrder(n->lchild_);
+    std::cout << n->val_ << ' ';
+    RInOrder(n->rchild_);
+}
+
+template<typename T>
+void BST<T>::RPostOrder(BST::Node *n) const {
+    if(n == nullptr) return;
+    RPostOrder(n->lchild_);
+    RPostOrder(n->rchild_);
+    std::cout << n->val_ << ' ';
 }
 
 

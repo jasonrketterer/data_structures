@@ -153,6 +153,7 @@ void Graph<T>::Dump() const {
         for (Vertex i = 0; i < n_; ++i) {
             std::cout << "[" << i << "]: ";
             g_[i].Display(std::cout);
+            std::cout << '\n';
         }
     }
 }
