@@ -31,8 +31,9 @@ public:
 
     void dfsIter(Vertex src); // iterative version
     void dfs(Vertex src);  // recursive version
-
     void bfs(Vertex src);
+
+    bool isPath(Vertex a, Vertex b) const;
 
     void readGraphFile(std::istream & is = std::cin);
     void Dump() const;

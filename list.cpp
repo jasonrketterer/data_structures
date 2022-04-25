@@ -379,6 +379,15 @@ void List<T>::Append(const List<T> & list) {
         PushBack(*i);
 }
 
+template<typename T>
+bool List<T>::Includes(const T &t) const {
+    ConstIterator i;
+    for(i = Begin(); i != End(); ++i)
+        if(*i == t)
+            return true;
+    return false;
+}
+
 template <typename T>
 bool operator == (const List<T>& list1, const List<T>& list2) {
     if(list1.Size() != list2.Size())

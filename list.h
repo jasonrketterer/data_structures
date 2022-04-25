@@ -39,17 +39,19 @@ public:
     virtual ~List();
     List & operator=(const List & rhs); // assignment
 
+    List & operator+=(const List & list);  // append a (deep) copy of list
+
     void PushFront(const T & t);
     void PushBack(const T & t);
     Iterator Insert(Iterator i, const T & t);
     ConstIterator Insert(ConstIterator i, const T & t);
 
-    List & operator+=(const List & list);  // append a (deep) copy of list
-
     bool PopFront();
     bool PopBack();
     Iterator Remove(Iterator i);
     void Clear();
+
+    bool Includes(const T & t) const;
 
     void Sort();
     void Reverse();

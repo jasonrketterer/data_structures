@@ -114,16 +114,18 @@ void Graph<T>::bfs(Vertex src) {
     Queue<T> q;
 
     q.Push(src);
-    Vertex front; ListIterator<T> i;
+    Vertex front;
+    ListIterator<T> i;
     while(!q.Empty()) {
         front = q.Front();
         q.Pop();
         visited[front] = true;
         std::cout << front << ' ';
         for(i = g_[front].Begin(); i != g_[front].End(); ++i) {
-            if (!visited[*i])
+            if (!visited[*i]) {
                 q.Push(*i);
-            visited[*i] = true;
+                visited[*i] = true;
+            }
         }
     }
 }
@@ -155,5 +157,36 @@ void Graph<T>::Dump() const {
             g_[i].Display(std::cout);
             std::cout << '\n';
         }
+    }
+}
+
+// uses bidirectional BFS to determine if a path exists between a and b
+template<typename T>
+bool Graph<T>::isPath(Vertex a, Vertex b) const {
+    if( a == b) return true;
+
+    Vector<bool> visited_a(VertexSize(), false);
+    Vector<bool> visited_b(VertexSize(), false);
+    List<Vertex> q_a, q_b;
+
+    q_a.PushFront(a);
+    q_b.PushFront(b);
+    Vertex front_a, front_b;
+    ConstListIterator<Vertex> i, j;
+    while(!q_a.Empty() && !q_b.Empty()) {
+        front_a = q_a.Front();
+        front_b = q_b.Front();
+        visited_a[front_a] = true;
+        visited_b[front_b] = true;
+        q_a.PopFront(); q_b.PopFront();
+
+        // add a's children for curr vertex at front of q
+        for(i = g_[front_a].Begin(); i != g_[front_a].End(); ++i) {
+            if(!visited_a[*i]) {
+                visited_a[*i] = true;
+                q_a.PushBack(*i);
+            }
+        }
+        // add b's children for current vertex, checking along the way if any of them equal
     }
 }
