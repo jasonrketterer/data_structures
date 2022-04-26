@@ -39,6 +39,10 @@ public:
     void PostOrder() const;
     void LevelOrder() const;
 
+    void minTree(Vector<T> & v);
+    void listOfDepths(Vector< List<T> > & v);
+    bool isBalanced() const;
+
     void printHTree() const; // print horizontal tree
     void printVTree() const; // print vertical tree
 
@@ -74,6 +78,9 @@ protected:
 
     void RPrintHTree(Node * n, int space) const;
     void printSpace(double n, Node * removed) const; // helper function for printVTree()
+
+    void RMinTree(Node * & n, int s, int e, Vector<T> & v);
+    bool RisBalanced(Node * n) const;
 
     void Clear(Node * & n);
 };

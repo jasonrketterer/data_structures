@@ -118,8 +118,6 @@ void Graph<T>::bfs(Vertex src) {
     ListIterator<T> i;
     while(!q.Empty()) {
         front = q.Front();
-        q.Pop();
-        visited[front] = true;
         std::cout << front << ' ';
         for(i = g_[front].Begin(); i != g_[front].End(); ++i) {
             if (!visited[*i]) {
@@ -127,6 +125,7 @@ void Graph<T>::bfs(Vertex src) {
                 visited[*i] = true;
             }
         }
+        q.Pop();
     }
 }
 
@@ -160,33 +159,53 @@ void Graph<T>::Dump() const {
     }
 }
 
-// uses bidirectional BFS to determine if a path exists between a and b
+// uses BFS to determine if a path exists between two vertices
+// also display the path it took to get there
 template<typename T>
-bool Graph<T>::isPath(Vertex a, Vertex b) const {
-    if( a == b) return true;
+bool Graph<T>::isPath(Vertex from, Vertex to) const {
+    if( from == to) return true;
 
-    Vector<bool> visited_a(VertexSize(), false);
-    Vector<bool> visited_b(VertexSize(), false);
-    List<Vertex> q_a, q_b;
+    Queue<Vertex> q;
+    Vector<bool> visited(VertexSize(), false);
+    Vector<Vertex> parent(VertexSize(), 0);
 
-    q_a.PushFront(a);
-    q_b.PushFront(b);
-    Vertex front_a, front_b;
-    ConstListIterator<Vertex> i, j;
-    while(!q_a.Empty() && !q_b.Empty()) {
-        front_a = q_a.Front();
-        front_b = q_b.Front();
-        visited_a[front_a] = true;
-        visited_b[front_b] = true;
-        q_a.PopFront(); q_b.PopFront();
-
-        // add a's children for curr vertex at front of q
-        for(i = g_[front_a].Begin(); i != g_[front_a].End(); ++i) {
-            if(!visited_a[*i]) {
-                visited_a[*i] = true;
-                q_a.PushBack(*i);
+    q.Push(from);
+    Vertex front;
+    ConstListIterator<Vertex> i;
+    while(!q.Empty()) {
+        front = q.Front();
+        for(i = g_[front].Begin(); i != g_[front].End(); ++i) {
+            if(!visited[*i]) {
+                q.Push(*i);
+                visited[*i] = true;
+                parent[*i] = front;
+                if(*i == to) {
+                    printPath(from, to, parent);
+                    return true;
+                }
             }
         }
-        // add b's children for current vertex, checking along the way if any of them equal
+        q.Pop();
     }
+    return false;
+}
+
+template<typename T>
+void Graph<T>::printPath(Vertex from, Vertex to, Vector<Vertex> parent) const {
+    //parent.Dump();
+    // start from 'to' and work backwards
+    List<Vertex> path;
+    path.PushFront(to);
+    Vertex v = to;
+    while(v != from) {
+        path.PushFront(parent[v]);
+        v = parent[v];
+    }
+    //std::cout << path << '\n';
+
+    ConstListIterator<Vertex> i = path.Begin();
+    std::cout << "{ " << *i; ++i;
+    for(; i != path.End(); ++i)
+        std::cout << " -> " << *i;
+    std::cout << " }" << '\n';
 }

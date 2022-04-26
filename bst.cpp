@@ -323,6 +323,65 @@ void BST<T>::RPostOrder(BST::Node *n) const {
     std::cout << n->val_ << ' ';
 }
 
+// takes in a vector of sorted values and constructs a minimal height tree
+template<typename T>
+void BST<T>::minTree(Vector<T> & v) {
+    Clear();
+    RMinTree(root_, 0, v.Size()-1, v);
+}
 
+template <typename T>
+void BST<T>::RMinTree(Node * & n, int s, int e, Vector<T> & v) {
+    if(s > e) return;
+    int mid = (s + e) / 2;
+    n = CreateNode(v[mid]);
+    RMinTree(n->lchild_, s, mid - 1, v);
+    RMinTree(n->rchild_, mid + 1, e, v);
+}
 
+template <typename T>
+void BST<T>::listOfDepths(Vector< List<T> > & v) {
+    if(root_ == nullptr) return;
+
+    v.SetSize(Height()+1);
+
+    // use BFS to get nodes at each level; keep track of depths in a map
+    //Vector<int> depth(Size(), 0);
+    std::map<T,int> depth;
+    Queue<Node *> q;
+    q.Push(root_);
+    depth[root_->val_] = 0;
+    v[0].PushBack(root_->val_);
+    Node * front; int d;
+    while(!q.Empty()) {
+        front = q.Front();
+        d = depth[front->val_];
+        if(front->lchild_) {
+            q.Push(front->lchild_);
+            depth[front->lchild_->val_] = d + 1;
+            v[depth[front->lchild_->val_]].PushBack(front->lchild_->val_);
+        }
+        if(front->rchild_) {
+            q.Push(front->rchild_);
+            depth[front->rchild_->val_] = d + 1;
+            v[depth[front->rchild_->val_]].PushBack(front->rchild_->val_);
+        }
+        q.Pop();
+    }
+}
+
+template<typename T>
+bool BST<T>::isBalanced() const {
+    return RisBalanced(root_);
+}
+
+template<typename T>
+bool BST<T>::RisBalanced(Node * n) const {
+    if(n == nullptr) return true;
+    int hdiff = RHeight(n->lchild_) - RHeight(n->rchild_);
+    if(abs(hdiff) > 1)
+        return false;
+    else
+        return RisBalanced(n->lchild_) && RisBalanced(n->rchild_);
+}
 

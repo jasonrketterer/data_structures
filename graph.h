@@ -33,7 +33,7 @@ public:
     void dfs(Vertex src);  // recursive version
     void bfs(Vertex src);
 
-    bool isPath(Vertex a, Vertex b) const;
+    bool isPath(Vertex to, Vertex from) const;
 
     void readGraphFile(std::istream & is = std::cin);
     void Dump() const;
@@ -44,6 +44,8 @@ private:
 
     // helper function for DFS
     ListIterator<T> findNextUnvisited(Vertex v, Vector<bool> & visited, Vector< ListIterator<T> > & adjListIterators);
+
+    void printPath(Vertex from, Vertex to, Vector<Vertex> parent) const;
 };
 
 #include "graph.cpp"
