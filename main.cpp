@@ -83,13 +83,53 @@ public:
     }
 };
 
-void assertTest(int n) {
-    assert((n == 0));
+std::vector< std::list<int> > findWays(int steps, std::vector<int> & hops) {
+    static std::map< int, std::vector< std::list<int> > > memo;
+
+    if(steps == 0) {
+        std::vector<std::list<int> > empty;
+        return empty;
+    }
+    if(steps < 0) {
+        std::vector< std::list<int> > null;
+        null[0].push_back(-1);
+        return null;
+    }
+
+    for(auto i : hops) {
+        int diff = steps - hops[i];
+        std::vector< std::list<int> > result;
+        result = findWays(diff, hops);
+        if(result[0].front() != -1) { // not null
+            std::list<int> l;
+            result.push_back(l);
+            result[result.size()-1].push_front(i);
+            return result;
+        }
+    }
+    std::vector< std::list<int> > null;
+    null[0].push_back(-1);
+    return null;
+};
+
+std::list< std::vector<int> > findWaysTab(int steps, std::vector<int> & hops) {
+    std::vector< std::list< std::vector<int> > * > table(steps + 1, nullptr);
+
+    table[0] = new std::list<std::vector<int>>;
+
+    for(int i = 0; i < table.size(); ++i) {
+
+    }
 }
 
 int main() {
+    std::vector<int> hops = {1,2,3};
+    int steps = 8;
+
+    std::list< std::vector<int> > result = findWaysTab(steps, hops);
 
 
+    /*
     BST<int> t;
     t.Insert(8); t.Insert(1); t.Insert(12);
     t.Insert(5); t.Insert(0); t.Insert(4);
@@ -99,9 +139,7 @@ int main() {
     t.InOrder();
     //std::cout << "\nTree height is " << t.Height() << '\n';
     //std::cout << "The number of nodes is " << t.Size() << '\n';
-    assertTest(0);
-    //assertTest(1);
-
+    */
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
