@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <math.h>
+#include <limits>
 #include "queue.h"
 #include "list.h"
 #include "bst.h"
@@ -372,7 +373,7 @@ void BST<T>::listOfDepths(Vector< List<T> > & v) {
 
 template<typename T>
 bool BST<T>::isBalanced() const {
-    return RisBalanced(root_);
+    return RisBalanced(root_, root_->lchild_->val_, root_->rchild_->val_);
 }
 
 template<typename T>
@@ -383,5 +384,20 @@ bool BST<T>::RisBalanced(Node * n) const {
         return false;
     else
         return RisBalanced(n->lchild_) && RisBalanced(n->rchild_);
+}
+
+template<typename T>
+bool BST<T>::validateBST() const {
+    return RvalidateBST(root_, std::numeric_limits<T>::min(), std::numeric_limits<T>::max());
+}
+
+template<typename T>
+bool BST<T>::RvalidateBST(Node * n, const T left, const T right) const {
+    if(n == nullptr)
+        return true;
+    if ( !((n->val_ >= left) && (n->val_ < right)) )
+        return false;
+    return RvalidateBST(n->lchild_, left, n->val_)
+            && RvalidateBST(n->rchild_, n->val_, right);
 }
 

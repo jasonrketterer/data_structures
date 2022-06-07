@@ -83,6 +83,7 @@ public:
     }
 };
 
+/*
 std::vector< std::list<int> > findWays(int steps, std::vector<int> & hops) {
     static std::map< int, std::vector< std::list<int> > > memo;
 
@@ -121,25 +122,23 @@ std::list< std::vector<int> > findWaysTab(int steps, std::vector<int> & hops) {
 
     }
 }
+*/
 
 int main() {
-    std::vector<int> hops = {1,2,3};
-    int steps = 8;
 
-    std::list< std::vector<int> > result = findWaysTab(steps, hops);
-
-
-    /*
     BST<int> t;
     t.Insert(8); t.Insert(1); t.Insert(12);
     t.Insert(5); t.Insert(0); t.Insert(4);
     t.Insert(6);  t.Insert(10); t.Insert(11);
     t.Insert(9); t.Insert(13); t.Insert(14);
     t.printVTree();
-    t.InOrder();
+    if(t.validateBST())
+        std::cout << "Tree is valid BST\n";
+    else
+        std::cout << "Tree is not valid BST\n";
     //std::cout << "\nTree height is " << t.Height() << '\n';
     //std::cout << "The number of nodes is " << t.Size() << '\n';
-    */
+
     /*
     int myints[] = {75,23,65,42,13};
     std::list<int> mylist (myints,myints+5);
